@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { homeRouter } from "./routes/homeRouter.js";
 import { userRouter } from "./routes/userRouter.js";
+import { searchRouter } from "./routes/searchRouter.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(homeRouter);
 
 // userRouter 아래에 라우터 넣어주세요!
 app.use(userRouter);
+app.use('/cocktails', searchRouter);
 
 
 app.use(errorMiddleware);
