@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { addCommentReport, addBoardReport } from "../controllers/reportController.js";
+import { addCommentReport, addBoardReport, showBoardReport, showCommentReport } from "../controllers/reportController.js";
 
 const reportRouter = Router();
 
-reportRouter.post("/reports/comment/:id", addCommentReport);
+reportRouter.get("/reports/board", showBoardReport);
+reportRouter.get("/reports/comment", showCommentReport);
+reportRouter.post("/reports/board/:boardId/comment/:commentId", addCommentReport);
 reportRouter.post("/reports/board/:id", addBoardReport);
+
 
 export { reportRouter };
