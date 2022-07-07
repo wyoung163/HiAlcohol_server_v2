@@ -36,7 +36,7 @@ const showCommentReport = async (req, res) => {
 
         const reportedComments = await selectreportedComments();
         
-        return res.send(response({"code":200, "message": '신고된 댓글과 게시글 목록 조회에 성공하였습니다.'}, reportedBoards));
+        return res.send(response({"code":200, "message": '신고된 댓글과 게시글 목록 조회에 성공하였습니다.'}, reportedComments));
     } catch(err) {
         console.log(err);
         return res.send(errResponse({"code": 400, "message": '신고된 댓글과 게시글 목록 조회에 실패하였습니다.'}));
