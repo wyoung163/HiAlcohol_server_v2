@@ -7,6 +7,7 @@ import { homeRouter } from "./routes/homeRouter.js";
 import { userRouter } from "./routes/userRouter.js";
 import { searchRouter } from "./routes/searchRouter.js";
 import { suggestionRouter } from "./routes/suggestionRouter.js";
+import { recipeRouter } from "./routes/recipeRouter.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(homeRouter);
 app.use(userRouter);
 app.use('/cocktails', searchRouter);
 app.use(suggestionRouter);
+app.use(recipeRouter);
 
 app.use(errorMiddleware);
 
