@@ -27,11 +27,11 @@ async function selectBoardReports() {
     `;
     for(var i = 0; i < reportedBoards.length; i++){
         let [Info] = await db.query(boardsInfoQuery, [reportedBoards[i].postId]);
-        reportedBoardsInfo.push(Info);
-    }
+        reportedBoardsInfo.push(Info[0]);
+    }    
 
     for(var i = 0; i < reportedBoards.length; i++){
-        Object.assign(reportedBoardsInfo[i][0], count[i][0]);
+        Object.assign(reportedBoardsInfo[i], count[i][0]);
     }
 
     return reportedBoardsInfo;
@@ -39,6 +39,42 @@ async function selectBoardReports() {
 
 //신고된 댓글의 게시글
 async function selectCommentReports() {
+    var count = [];
+    var reportedCommentsInfo = [];
+
+    const selectCommentReportsQuery = `
+        select DISTINCT postId, commentId from report_comment
+    `;
+    const [reportedComments] = await db.query(selectCommentReportsQuery);
+
+    const countQuery = `
+        select count(*) from report_comment
+        where postId = ? and commentId = ?;
+    `;
+    for(var i = 0; i < reportedComments.length; i++){
+        let [num] = await db.query(countQuery, [reportedComments[i].postId, reportedComments[i].commentId]);
+        count.push(num);
+    }
+
+    const commentBoardInfoQuery =`
+        select p.id, u.nickname, p.title, p.content, p.createdate
+        from post as p
+        join user as u on p.userId = u.id
+        where p.id = ?;
+    `;
+    const commentsInfoQuery =`
+        select c.id, u.nickname, c.content, c.createdate
+        from comment as c
+        join user as u on c.userId = u.id
+        where c.id = ? and c.postId = ?;
+    `;
+    for(var i = 0; i < reportedComments.length; i++){
+        let [Info1] = await db.query(commentBoardInfoQuery, [reportedComments[i].postId]);
+        let [Info2] = await db.query(commentsInfoQuery, [reportedComments[i].commentId, reportedComments[i].postId]);
+        reportedCommentsInfo.push({"post": Info1[0], "comment": Info2[0]});
+    }
+
+    return reportedCommentsInfo;
 
 }
 
