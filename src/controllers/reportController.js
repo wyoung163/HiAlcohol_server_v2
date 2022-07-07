@@ -16,13 +16,11 @@ const showBoardReport = async (req, res) => {
         // const userId = req.currentUserId;
         
         const reportedBoards = await selectreportedBoards();
-        // const reportCounts = reportedBoards.count;
-        // const reportedBoardsInfo = reportedBoards.reportedBoardsInfo;
 
-        return res.send(response({"code":200, "message": '댓글 신고에 성공하였습니다.'}, reportedBoards));
+        return res.send(response({"code":200, "message": '신고된 게시글 목록 조회에 성공하였습니다.'}, reportedBoards));
     } catch(err) {
         console.log(err);
-        return res.send(errResponse({"code": 400, "message": '댓글 신고에 실패하였습니다.'}));
+        return res.send(errResponse({"code": 400, "message": '신고된 게시글 목록 조회에 실패하였습니다.'}));
     }
 
 
@@ -30,13 +28,19 @@ const showBoardReport = async (req, res) => {
 
 //신고된 댓글 조회
 const showCommentReport = async (req, res) => {
-     // const userId = req.session.id;
-     const userId = req.body.userId;
-     // const userId = req.currentUserId;
-     const postId = req.params.boardId;
-     const commentId = req.params.commentId;
+    try {
+        // const userId = req.session.id;
+        // const userId = req.body.userId;
+        // const userId = req.currentUserId;
 
-     const reportedComments = await selectreportedComments();
+
+        const reportedComments = await selectreportedComments();
+        
+        return res.send(response({"code":200, "message": '신고된 댓글과 게시글 목록 조회에 성공하였습니다.'}, reportedBoards));
+    } catch(err) {
+        console.log(err);
+        return res.send(errResponse({"code": 400, "message": '신고된 댓글과 게시글 목록 조회에 실패하였습니다.'}));
+    }
  
 }
 
