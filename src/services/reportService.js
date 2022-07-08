@@ -4,7 +4,9 @@ import {
     insertReportedComment, 
     insertReportedBoard, 
     checkCommentExistence, 
-    checkBoardExistence 
+    checkBoardExistence, 
+    updateBlindComment,
+    updateBlindBoard
 } from "../models/Report.js";
 
 //신고된 게시글 모아보기
@@ -41,6 +43,17 @@ const checkBoardDuplication = async (postId, userId) => {
     return duplication;
 }
 
+const updateCommentBlind = async (postId, commentId) => {
+    const isBlind = await updateBlindComment(postId, commentId);
+    return isBlind;
+}
+
+const updateBoardBlind = async (postId) => {
+    const isBlind = await updateBlindBoard(postId);
+    return isBlind;
+}
+
+
 
 export { 
     selectreportedBoards, 
@@ -48,5 +61,7 @@ export {
     insertCommentReport,
     insertBoardReport, 
     checkCommentDuplication, 
-    checkBoardDuplication 
+    checkBoardDuplication, 
+    updateCommentBlind,
+    updateBoardBlind
 };
