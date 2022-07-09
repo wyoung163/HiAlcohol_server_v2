@@ -1,8 +1,29 @@
-import { insertReportedComment, insertReportedBoard, checkExistence } from "../models/Report.js";
+import { 
+    selectBoardReports, 
+    selectCommentReports, 
+    insertReportedComment, 
+    insertReportedBoard, 
+    checkCommentExistence, 
+    checkBoardExistence, 
+    updateBlindComment,
+    updateBlindBoard
+} from "../models/Report.js";
+
+//신고된 게시글 모아보기
+const selectreportedBoards = async () => {
+    const reportedBoards = await selectBoardReports();
+    return reportedBoards;
+}
+
+//신고된 댓글의 게시글 모아보기
+const selectreportedComments = async () => {
+    const reportedComments = await selectCommentReports();
+    return reportedComments;
+}
 
 //댓글 신고
-const insertCommentReport = async (commentId, userId) => {
-    let reportedComment = await insertReportedComment(commentId, userId);
+const insertCommentReport = async (postId, commentId, userId) => {
+    const reportedComment = await insertReportedComment(postId, commentId, userId);
     return reportedComment;
 }
 
@@ -12,9 +33,35 @@ const insertBoardReport = async (postId, userId) => {
     return reportedBoard;
 }
 
-const checkDuplication = async (id, userId, type) => {
-    const duplication = await checkExistence(id, userId, type);
+const checkCommentDuplication = async (postId, commentId, userId) => {
+    const duplication = await checkCommentExistence(postId, commentId, userId);
     return duplication;
 }
 
-export { insertCommentReport, insertBoardReport, checkDuplication };
+const checkBoardDuplication = async (postId, userId) => {
+    const duplication = await checkBoardExistence(postId, userId);
+    return duplication;
+}
+
+const updateCommentBlind = async (postId, commentId) => {
+    const isBlind = await updateBlindComment(postId, commentId);
+    return isBlind;
+}
+
+const updateBoardBlind = async (postId) => {
+    const isBlind = await updateBlindBoard(postId);
+    return isBlind;
+}
+
+
+
+export { 
+    selectreportedBoards, 
+    selectreportedComments, 
+    insertCommentReport,
+    insertBoardReport, 
+    checkCommentDuplication, 
+    checkBoardDuplication, 
+    updateCommentBlind,
+    updateBoardBlind
+};
