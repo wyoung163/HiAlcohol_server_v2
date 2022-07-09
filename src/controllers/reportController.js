@@ -13,9 +13,7 @@ import { response, errResponse } from "../../config/response.js";
 //신고된 게시글 조회
 const showBoardReport = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.body.userId;
-        // const userId = req.currentUserId;
+        //const userId = req.currentUserId;
         
         const reportedBoards = await selectreportedBoards();
 
@@ -31,10 +29,7 @@ const showBoardReport = async (req, res) => {
 //신고된 댓글 조회
 const showCommentReport = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.body.userId;
         // const userId = req.currentUserId;
-
 
         const reportedComments = await selectreportedComments();
         
@@ -49,9 +44,7 @@ const showCommentReport = async (req, res) => {
 //댓글 신고
 const addCommentReport = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        const userId = req.body.userId;
-        // const userId = req.currentUserId;
+        const userId = req.currentUserId;
         const postId = req.params.boardId;
         const commentId = req.params.commentId;
         
@@ -72,8 +65,7 @@ const addCommentReport = async (req, res) => {
 //게시글 신고
 const addBoardReport = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        const userId = req.body.userId;
+        const userId = req.currentUserId;
         const postId = req.params.id;
         
         const duplication = await checkBoardDuplication(postId, userId);
@@ -91,9 +83,7 @@ const addBoardReport = async (req, res) => {
 
 const editCommentBlind = async (req,res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.currentUserId;
-        const userId = req.body.userId;
+        //const userId = req.currentUserId;
         const postId = req.params.boardId;
         const commentId = req.params.commentId;
 
@@ -111,9 +101,7 @@ const editCommentBlind = async (req,res) => {
 
 const editBoardBlind = async (req,res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.currentUserId;
-        const userId = req.body.userId;
+        //const userId = req.currentUserId;
         const postId = req.params.id;
 
         const isBlind  = await updateBoardBlind(postId);
