@@ -65,9 +65,23 @@ async function insertInclusionInfo(recipeId, materialIds) {
     return addedInclusions;
 }
 
+//중복 확인
+async function selectExistCocktail(cocktail) {
+    const selectExistCocktailQuery = `
+        select * from recipe
+        where cocktail = ?
+    `;
+
+    const [duplication] = await db.query(selectExistCocktailQuery, [cocktail]);
+
+    return duplication;
+}
+
+
 export {
     selectMaterialInfo,
     insertMaterialInfo, 
     insertRecipeInfo,
-    insertInclusionInfo
+    insertInclusionInfo,
+    selectExistCocktail
 };

@@ -1,4 +1,4 @@
-import { insertRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo } from "../models/Recipe.js";
+import { insertRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo, selectExistCocktail } from "../models/Recipe.js";
 
 //재료 존재 여부 확인
 const selectMaterials = async (materials) => {
@@ -24,4 +24,10 @@ const insertInclusions = async (recipeId, materialIds) => {
     return addedInclusions;
 }
 
-export { selectMaterials, insertMaterials, insertRecipe, insertInclusions };
+//레시피 중복 확인
+const checkExistence = async (cocktail) => {
+    const duplication = await selectExistCocktail(cocktail);
+    return duplication;
+}
+
+export { selectMaterials, insertMaterials, insertRecipe, insertInclusions, checkExistence };
