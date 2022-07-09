@@ -24,8 +24,8 @@ const insertSuggestionBoard = async (userId, inputSuggestion) => {
 }
 
 //건의 게시글 수정
-const updateSuggestionBoard = async (suggestionId, updatedSuggestion) => {
-    const updatedsuggestionBoard = await updateSuggestion(suggestionId, updatedSuggestion);   
+const updateSuggestionBoard = async (userId, suggestionId, updatedSuggestion) => {
+    const updatedsuggestionBoard = await updateSuggestion(userId, suggestionId, updatedSuggestion);   
     return updatedsuggestionBoard;
 }
 
