@@ -4,8 +4,7 @@ import { response, errResponse } from "../../config/response.js";
 //좋아요 선택
 const addBoardLike = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.body.userId;
+        const userId = req.currentUserId;
         const postId = req.params.id;
         const addedLikeId = await insertBoardLike(postId, userId);
 
@@ -19,8 +18,7 @@ const addBoardLike = async (req, res) => {
 //좋아요 취소
 const cancelBoardLike = async (req, res) => {
     try {
-        // const userId = req.session.id;
-        // const userId = req.body.userId;
+        const userId = req.currentUserId;
         const postId = req.params.id;
         const canceledLike = await deleteBoardLike(postId, userId);
 
