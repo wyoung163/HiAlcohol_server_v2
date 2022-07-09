@@ -7,7 +7,7 @@ async function isAdmin(req, res, next) {
     const checkAdminQuery = `
         select role
         from user
-        where kakaoid = ?
+        where id = ?
     `;
     const role = await db.query(checkAdminQuery, [userId]);
 

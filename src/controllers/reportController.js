@@ -14,7 +14,7 @@ import { response, errResponse } from "../../config/response.js";
 const showBoardReport = async (req, res) => {
     try {
         //const userId = req.currentUserId;
-        
+
         const reportedBoards = await selectreportedBoards();
 
         return res.send(response({"code":200, "message": '신고된 게시글 목록 조회에 성공하였습니다.'}, reportedBoards));
@@ -22,8 +22,6 @@ const showBoardReport = async (req, res) => {
         console.log(err);
         return res.send(errResponse({"code": 400, "message": '신고된 게시글 목록 조회에 실패하였습니다.'}));
     }
-
-
 }
 
 //신고된 댓글 조회
@@ -38,7 +36,6 @@ const showCommentReport = async (req, res) => {
         console.log(err);
         return res.send(errResponse({"code": 400, "message": '신고된 댓글과 게시글 목록 조회에 실패하였습니다.'}));
     }
- 
 }
 
 //댓글 신고
