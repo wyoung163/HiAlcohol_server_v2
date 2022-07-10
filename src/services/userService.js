@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+import { db } from "../../config/db.js";
 
 import axios from "axios";
 import jwt from "jsonwebtoken";
@@ -9,8 +9,66 @@ const UserService = {
    * @param {Object} newUser - 생성할 회원 Object 
    * @returns createNewUser
    */
-   upsertKakaoUser: async ({ code  }) => {
+  upsertKakaoUser: async ({ code }) => {
+    const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
+    const KAKAO_REDIRECT_URL = "http://localhost:5000/users";
+    
+    //카카오 토큰 받기
+    const ret = await axios.post(
+      `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URL}&code=${code}`,
+    );
 
+    const kakaoToken = ret.data.access_token;
+
+    //카카오 유저정보 받기
+    const kakaoData = await axios.get(`https://kapi.kakao.com/v2/user/me`, {
+      headers: { Authorization: `Bearer ${kakaoToken}` },
+    });
+
+    let userData = {
+      kakaoid:  kakaoData.data.id,
+      profile_url: kakaoData.data.kakao_account.profile.thumbnail_image_url,
+      nickname: kakaoData.data.kakao_account.profile.nickname,
+    };
+
+    // 유저가 존재하는지 확인
+    const isUserExistQuery = `
+      select *
+      from user
+      where kakaoid = ?
+    `;
+    const isUserExist = await db.query(isUserExistQuery, [userData.kakaoid]);
+
+    if (!isUserExist) {
+      // 최초 로그인, 디비에 새로 생성
+      const createUserQuery = `
+        insert into user(kakaoid, profile_url, nickname)
+        values(?, ?, ?)
+      `;
+      const createdUser = await db.query(createUserQuery, [userData.kakaoid, userData.profile_url, userData.nickname]);
+      const createdUserId = createdUser[0].insertId;
+      
+      const isUserExistQuery = `
+        select *
+        from user
+        where id = ?
+      `;
+      userData = await db.query(isUserExistQuery, [createdUserId]);
+    }
+
+    // 로그인 성공 -> JWT 웹 토큰 생성
+    const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
+    const token = jwt.sign({ id: user.id }, secretKey);
+
+    const loginUser = {
+      id,
+      kakaoid,
+      profile_url: userData.profile_url,
+      nickname: userData.nickname,
+      token,
+    };
+
+    return loginUser;
   },
 
   /** 회원 존재 확인 함수
@@ -19,7 +77,13 @@ const UserService = {
    * @returns user
    */
   getUserInfo: async ({ id }) => {
-    
+    const isUserExistQuery = `
+      select id, kakaoid, profile_url, nickname, role
+      from user
+      where id = ?
+    `;
+    const isUserExist = await db.query(isUserExistQuery, [id]);
+    return isUserExist[0];
   },
 
   /** 회원 정보 수정 함수
@@ -28,8 +92,40 @@ const UserService = {
    * @param {Object} toUpdate - 업데이트할 유저 정보
    * @returns updatedUser
    */
-  editUserInfo: async ({ id, toUpdate }) => {
-  
+  editUserNickname: async ({ id, toUpdate }) => {
+    const updateUserQuery = `
+      update user set nickname = ?
+      where id = ?
+    `;
+
+    await db.query(updateUserQuery, [toUpdate.nickname, id]);
+
+    const getUpdatedUserQuery = `
+      select *
+      from user
+      where id = ?
+    `;
+
+    const updatedUser = await db.query(getUpdatedUserQuery, [id]);
+    return updatedUser[0];
+  },
+
+  editUserImage: async ({ id, toUpdate }) => {
+    const updateUserQuery = `
+      update user set profile_url = ?
+      where id = ?
+    `;
+
+    await db.query(updateUserQuery, [toUpdate.profile_url, id]);
+
+    const getUpdatedUserQuery = `
+      select *
+      from user
+      where id = ?
+    `;
+
+    const updatedUser = await db.query(getUpdatedUserQuery, [id]);
+    return updatedUser[0];
   },
 };
 
