@@ -3,7 +3,7 @@ import { Router } from "express";
 import { loginRequired } from "../middlewares/loginRequired.js";
 // import { boardValidator } from "../middlewares/express-validator/index.js";
 import { boardController } from "../controllers/boardController.js";
-// import { imageUpload } from "../utils/s3.js";
+import { imageUpload } from "../utils/s3.js";
 
 const boardRouter = Router();
 
@@ -12,6 +12,13 @@ boardRouter.post(
   "/boards",
   // loginRequired,
   boardController.createPost
+);
+
+boardRouter.post(
+  "/boards/:id/images",
+  // loginRequired,
+  imageUpload.array("images"),
+  boardController.createPostImages
 );
 
 // 게시글 전체 조회
