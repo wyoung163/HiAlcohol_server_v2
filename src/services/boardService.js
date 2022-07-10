@@ -3,8 +3,10 @@ import { db } from "../../config/db.js";
 const BoardService = {
   /** 게시글 생성 함수
    * 
-   * @param {Object} newUser - 생성할 회원 Object 
-   * @returns createNewUser
+   * @param {Number} userId - 글 쓴 유저
+   * @param {String} title - 글 제목
+   * @param {String} content - 내용 
+   * @returns createdPost
    */
   create: async ({ userId, title, content }) => {
     const createQuery = `
@@ -14,29 +16,35 @@ const BoardService = {
     const post = await db.query(createQuery, [userId, title, content]);
     const createdPostId = post[0].insertId;
     const getCreatedPostQuery = `
-      select p.id, u.nickname, p.title, p.content, p.images, p.createdate
+      select p.id, u.nickname, p.title, p.content, p.createdate
       from post as p
-      join user as u on u.kakaoid = p.userId
+      join user as u on u.id = p.userId
       where p.id = ?
     `;
-    const [createdPost] = await db.query(getCreatedPostQuery, [createdPostId]);
-    return createdPost;
+    const createdPost = await db.query(getCreatedPostQuery, [createdPostId]);
+    return createdPost[0][0];
   },
 
+  /** 게시글 이미지 추가 함수
+   * 
+   * @param {Array} images - 글 이미지 
+   * @returns createdPost
+   */
   createImages: async ({ id, images }) => {
     const createQuery = `
       UPDATE post set images = ?
       WHERE id = ?
     `;
-    const post = await db.query(createQuery, [id, images]);
+    await db.query(createQuery, [images, id]);
+
     const getPostQuery = `
-      select p.id, u.nickname, p.title, p.content, p.images, p.createdate
-      from post as p
-      join user as u on u.kakaoid = p.userId
-      where p.id = ?
+      SELECT p.id, u.nickname, p.title, p.content, p.images, p.createdate
+      FROM post as p
+      JOIN user as u ON u.id = p.userId
+      WHERE p.id = ?
     `;
-    const [createdPost] = await db.query(getCreatedPostQuery, [id]);
-    return createdPost;
+    const createdPost = await db.query(getPostQuery, [id]);
+    return createdPost[0][0];
   },
 
   /** 전체 글 조회 함수
@@ -60,32 +68,27 @@ const BoardService = {
    * @returns post
    */
   findPost: async ({ postId }) => {
-    console.log("postId ===>", postId);
     const getPostQuery = `
       SELECT p.id, u.nickname, p.title, p.content, p.images, p.createdate
       FROM post as p
       JOIN user as u ON u.id = p.userId
       WHERE p.id = ?
+      AND p.blind = 0
     `;
-    const [post] = await db.query(getPostQuery, [postId]);
-    return post;
+    const post = await db.query(getPostQuery, [postId]);
+    return post[0][0];
   },
 
-  /** 회원 정보 수정 함수
+  /** 글 수정 함수
    * 
-   * @param {INTEGER} id - 회원 id 
-   * @param {Object} toUpdate - 업데이트할 유저 정보
+   * @param {INTEGER} id - 글 id 
+   * @param {Object} toUpdate - 업데이트할 글 정보
    * @returns updatedUser
    */
-  editUserInfo: async ({ id, toUpdate }) => {
-    const updatedUser = await User.update(
-      toUpdate,
-      {
-        where: {
-          id,
-        },
-      });
-    return updatedUser;
+  updatePost: async ({ id, toUpdate }) => {
+
+    const updatedPost = await db.query();
+      
   },
 };
 
