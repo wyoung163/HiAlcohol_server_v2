@@ -1,9 +1,6 @@
 import multer from "multer";
 import multerS3 from "multer-s3";
 import aws from "aws-sdk";
-require("dotenv").config();
-
-import crypto from "crypto";
 
 const fileFilter = (req, file, cb) => {
   const typeArray = file.mimetype.split("/");
@@ -21,7 +18,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const s3 = new aws.S3({
+const userS3 = new aws.S3({
   endpoint: new aws.Endpoint(process.env.IMAGE_ENDPOINT),
   accessKeyId: process.env.IMAGE_ACCESSKEY,
   secretAccessKey: process.env.IMAGE_SECRETACCESSKEY,
@@ -30,15 +27,16 @@ const s3 = new aws.S3({
 
 let imageUpload = multer({
   storage: multerS3({
-    s3: s3,
+    s3: userS3,
     bucket: process.env.IMAGE_BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     acl: "public-read",
     key: (req, file, cb) => {
-      cb(null, `users/${Date.now()}_${crypto.randomUUID()}`);
+      cb(null, `users/${Date.now()}`);
     },
   }),
   fileFilter: fileFilter,
 });
 
-exports.imageUpload = multer(imageUpload);
+
+export default imageUpload = multer(imageUpload);

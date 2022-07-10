@@ -11,7 +11,7 @@ const UserService = {
    */
   upsertKakaoUser: async ({ code }) => {
     const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
-    const KAKAO_REDIRECT_URL = "http://localhost:5000/users/login/kakao";
+    const KAKAO_REDIRECT_URL = "http://localhost:5000/users";
     
     //카카오 토큰 받기
     const ret = await axios.post(
@@ -27,7 +27,7 @@ const UserService = {
 
     let userData = {
       kakaoid:  kakaoData.data.id,
-      profile_url: kakaoData.data.kakao_account.profile.profile_image_url,
+      profile_url: kakaoData.data.kakao_account.profile.thumbnail_image_url,
       nickname: kakaoData.data.kakao_account.profile.nickname,
     };
 
@@ -78,12 +78,12 @@ const UserService = {
    */
   getUserInfo: async ({ id }) => {
     const isUserExistQuery = `
-      select * 
+      select id, kakaoid, profile_url, nickname, role
       from user
       where id = ?
     `;
     const isUserExist = await db.query(isUserExistQuery, [id]);
-    return isUserExist;
+    return isUserExist[0];
   },
 
   /** 회원 정보 수정 함수
@@ -92,13 +92,13 @@ const UserService = {
    * @param {Object} toUpdate - 업데이트할 유저 정보
    * @returns updatedUser
    */
-  editUserInfo: async ({ id, toUpdate }) => {
+  editUserNickname: async ({ id, toUpdate }) => {
     const updateUserQuery = `
-      update user set profile_url = ?, nickname = ?
+      update user set nickname = ?
       where id = ?
     `;
 
-    await db.query(updateUserQuery, [toUpdate.profile_url, toUpdate.nickname, id]);
+    await db.query(updateUserQuery, [toUpdate.nickname, id]);
 
     const getUpdatedUserQuery = `
       select *
@@ -107,7 +107,25 @@ const UserService = {
     `;
 
     const updatedUser = await db.query(getUpdatedUserQuery, [id]);
-    return updatedUser;
+    return updatedUser[0];
+  },
+
+  editUserImage: async ({ id, toUpdate }) => {
+    const updateUserQuery = `
+      update user set profile_url = ?
+      where id = ?
+    `;
+
+    await db.query(updateUserQuery, [toUpdate.profile_url, id]);
+
+    const getUpdatedUserQuery = `
+      select *
+      from user
+      where id = ?
+    `;
+
+    const updatedUser = await db.query(getUpdatedUserQuery, [id]);
+    return updatedUser[0];
   },
 };
 

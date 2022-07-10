@@ -3,7 +3,7 @@ import { Router } from "express";
 import { loginRequired } from "../middlewares/loginRequired.js";
 import { userValidator } from "../middlewares/express-validator/index.js";
 import { userController } from "../controllers/userController.js";
-// import { imageUpload } from "../utils/s3.js";
+import imageUpload from "../utils/s3.js";
 
 const userRouter = Router();
 
@@ -24,8 +24,15 @@ userRouter.get(
 userRouter.put(
   "/users",
   loginRequired,
-  // imageUpload.single("profile_url"),
-  userController.updateUserInfo
+  userController.updateUserNickname
+);
+
+// 회원 정보 수정
+userRouter.put(
+  "/users/image",
+  loginRequired,
+  imageUpload.single("profile_url"),
+  userController.updateUserImage
 );
 
 
