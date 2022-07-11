@@ -11,10 +11,11 @@ const boardRouter = Router();
 boardRouter.post(
   "/boards",
   loginRequired,
-  boardValidator.checkBody,
+  imageUpload.array("images"),
   boardController.createPost
 );
 
+// 게시글 이미지 첨부
 boardRouter.post(
   "/boards/:id/images",
   imageUpload.array("images"),
@@ -36,16 +37,17 @@ boardRouter.get(
 // 게시글 수정
 boardRouter.put(
   "/boards/:id",
-  // loginRequired,
+  loginRequired,
+  // imageUpload.array("images"),
   boardController.editPost
 );
 
-// // 게시글 삭제
-// boardRouter.delete(
-//   "/boards/:id",
-//   loginRequired,
-//   boardController.deletePost
-// );
+// 게시글 삭제
+boardRouter.delete(
+  "/boards/:id",
+  loginRequired,
+  boardController.deletePost
+);
 
 
 export { boardRouter };

@@ -8,15 +8,15 @@ const BoardService = {
    * @param {String} content - 내용 
    * @returns createdPost
    */
-  create: async ({ userId, title, content }) => {
+  create: async ({ userId, title, content, images }) => {
     const createQuery = `
-      insert into post(userId, title, content, createdate)
-      values(?, ?, ?, now())
+      insert into post(userId, title, content, images, createdate)
+      values(?, ?, ?, ?, now())
     `;
-    const post = await db.query(createQuery, [userId, title, content]);
+    const post = await db.query(createQuery, [userId, title, content, images]);
     const createdPostId = post[0].insertId;
     const getCreatedPostQuery = `
-      select p.id, u.nickname, p.title, p.content, p.createdate
+      select p.id, u.nickname, p.title, p.content, p.images, p.createdate
       from post as p
       join user as u on u.id = p.userId
       where p.id = ?
@@ -92,6 +92,15 @@ const BoardService = {
     `;
     const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, id]);
     return updatedPost;  
+  },
+
+  removePost: async ({ id }) => {
+    const deletePostQuery = `
+      update post set blind = 2
+      where id = ?
+    `;
+    const deletedPost = await db.query(deletePostQuery, [id]);
+    return deletedPost;
   },
 };
 

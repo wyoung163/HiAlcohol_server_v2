@@ -7,7 +7,16 @@ const boardController = {
       const userId = req.currentUserId;
       const title = req.body.title;
       const content = req.body.content;
-      const data = await BoardService.create({ userId, title, content });
+      const files = req.files;
+      let images = files.map((v) => v.location);
+      // 배열을 저장하기 위해 문자열로 변환
+      // 이미지가 없다면 null로
+      images = images.length === 0 ? null : JSON.stringify(images);
+
+      const data = await BoardService.create({ userId, title, content, images });
+      console.log(data);
+      // 문자열을 배열로 변환
+      data.images = JSON.parse(data.images);
       
       const body = {
         code: 201,
@@ -91,7 +100,7 @@ const boardController = {
           message: "존재하지 않는 게시글입니다.",
         };
         
-        return res.status(404).send(body);
+        return res.status(404).send({error: body});
       }
       
       // 문자열을 배열로 변환
@@ -111,8 +120,7 @@ const boardController = {
 
   editPost: async (req, res, next) => { 
     try { 
-      // const userId = req.currentUserId;
-      const userId = 1;
+      const userId = req.currentUserId;
       const id = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
@@ -135,7 +143,7 @@ const boardController = {
           message: "존재하지 않는 게시글입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({error: body});
       }
 
       if (isPostExist.userId !== userId) {
@@ -144,7 +152,7 @@ const boardController = {
           message: "본인이 작성한 글만 수정 가능합니다.",
         };
 
-        return res.status(403).send(body);
+        return res.status(403).send({error: body});
       }
 
       let data = await BoardService.updatePost({ id, toUpdate });
@@ -161,6 +169,39 @@ const boardController = {
     } catch (err) {
       next(err);
     }
+  },
+
+  deletePost: async (req, res, next) => {
+    const userId = req.currentUserId;
+    const id = req.params.id;
+
+    const isPostExist = await BoardService.findPost({ postId: id });
+    if (!isPostExist) {
+      const body = {
+        code: 404,
+        message: "존재하지 않는 게시글입니다.",
+      };
+
+      return res.status(404).send({error: body});
+    }
+
+    if (isPostExist.userId !== userId) {
+      const body = {
+        code: 403,
+        message: "본인이 작성한 글만 삭제 가능합니다.",
+      };
+
+      return res.status(403).send({error: body});
+    }
+
+    await BoardService.removePost({ id });
+    
+    const body = {
+      code: 200,
+      message: "글 삭제에 성공하였습니다.",
+    };
+
+    return res.status(200).send(body);
   },
 };
 
