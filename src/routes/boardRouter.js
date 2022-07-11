@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { loginRequired } from "../middlewares/loginRequired.js";
-// import { boardValidator } from "../middlewares/express-validator/index.js";
+import { boardValidator } from "../middlewares/express-validator/index.js";
 import { boardController } from "../controllers/boardController.js";
 import imageUpload from "../utils/s3.js";
 
@@ -11,6 +11,7 @@ const boardRouter = Router();
 boardRouter.post(
   "/boards",
   loginRequired,
+  boardValidator.checkBody,
   boardController.createPost
 );
 
@@ -32,12 +33,12 @@ boardRouter.get(
   boardController.getPost
 );
 
-// // 게시글 수정
-// boardRouter.put(
-//   "/boards/:id",
-//   loginRequired,
-//   boardController.editPost
-// );
+// 게시글 수정
+boardRouter.put(
+  "/boards/:id",
+  // loginRequired,
+  boardController.editPost
+);
 
 // // 게시글 삭제
 // boardRouter.delete(

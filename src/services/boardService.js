@@ -69,7 +69,7 @@ const BoardService = {
    */
   findPost: async ({ postId }) => {
     const getPostQuery = `
-      SELECT p.id, u.nickname, p.title, p.content, p.images, p.createdate
+      SELECT p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
       FROM post as p
       JOIN user as u ON u.id = p.userId
       WHERE p.id = ?
@@ -86,9 +86,12 @@ const BoardService = {
    * @returns updatedUser
    */
   updatePost: async ({ id, toUpdate }) => {
-
-    const updatedPost = await db.query();
-      
+    const updatePostQuery = `
+      update post set title = ?, content = ?, updatedate = now()
+      where id = ?
+    `;
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, id]);
+    return updatedPost;  
   },
 };
 

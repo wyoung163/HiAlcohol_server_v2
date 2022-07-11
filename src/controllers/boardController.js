@@ -8,7 +8,7 @@ const boardController = {
       const title = req.body.title;
       const content = req.body.content;
       const data = await BoardService.create({ userId, title, content });
-  
+      
       const body = {
         code: 201,
         message: "글 작성에 성공하였습니다.",
@@ -46,7 +46,6 @@ const boardController = {
       images = JSON.stringify(images);
 
       const data = await BoardService.createImages({ id, images });
-
       // 문자열을 배열로 변환
       data.images = JSON.parse(data.images);
 
@@ -86,7 +85,6 @@ const boardController = {
       
       const data = await BoardService.findPost({ postId });
       
-      
       if (!data) { 
         const body = {
           code: 404,
@@ -113,13 +111,15 @@ const boardController = {
 
   editPost: async (req, res, next) => { 
     try { 
-      const userId = req.currentUserId;
-      const profile_image = req.file.profile_image;
-      const nickname = req.body.nickname;
+      // const userId = req.currentUserId;
+      const userId = 1;
+      const id = req.params.id;
+      const title = req.body.title;
+      const content = req.body.content;
 
       const toUpdate = {
-        profile_image,
-        nickname,
+        title,
+        content,
       };
 
       Object.keys(toUpdate).forEach((key) => {
@@ -128,9 +128,8 @@ const boardController = {
         }
       });
 
-      const data = await BoardService.updatePost({ id, toUpdate });
-
-      if (!data) { 
+      const isPostExist = await BoardService.findPost({ postId: id });
+      if (!isPostExist) {
         const body = {
           code: 404,
           message: "존재하지 않는 게시글입니다.",
@@ -139,6 +138,19 @@ const boardController = {
         return res.status(404).send(body);
       }
 
+      if (isPostExist.userId !== userId) {
+        const body = {
+          code: 403,
+          message: "본인이 작성한 글만 수정 가능합니다.",
+        };
+
+        return res.status(403).send(body);
+      }
+
+      let data = await BoardService.updatePost({ id, toUpdate });
+      data = await BoardService.findPost({ postId: id });
+      // 문자열을 배열로 변환
+      data.images = JSON.parse(data.images);
       const body = {
         code: 200,
         message: "글 정보 수정에 성공하였습니다.",
