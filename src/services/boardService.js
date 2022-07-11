@@ -96,7 +96,7 @@ const BoardService = {
 
   removePost: async ({ id }) => {
     const deletePostQuery = `
-      update post set blind = 2
+      update post set updatedate = now(), blind = 2
       where id = ?
     `;
     const deletedPost = await db.query(deletePostQuery, [id]);
