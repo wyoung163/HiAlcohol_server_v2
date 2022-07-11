@@ -27,7 +27,7 @@ const userController = {
           message: "존재하지 않는 유저입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({ error: body });
       }
 
       const body = {
@@ -59,7 +59,7 @@ const userController = {
           message: "존재하지 않는 유저입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({ error: body });
       }
 
       const body = {
@@ -91,7 +91,7 @@ const userController = {
           message: "존재하지 않는 유저입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({ error: body });
       }
 
       const body = {
