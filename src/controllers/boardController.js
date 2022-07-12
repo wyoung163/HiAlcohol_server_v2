@@ -207,6 +207,26 @@ const boardController = {
       next(err);
     }
   },
+
+  // 게시글의 댓글 조회
+  getPostComments: async (req, res, next) => {
+    try {
+      const postId = req.params.postId;
+
+      // 글이 존재하는지 확인
+
+      const data = await BoardService.getPostComments({ postId });
+      const body = {
+        code: 200,
+        message: "댓글 조회에 성공하였습니다.",
+        data,
+      };
+
+      return res.status(200).send(body);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 

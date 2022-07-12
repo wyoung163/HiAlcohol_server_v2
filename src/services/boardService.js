@@ -102,6 +102,24 @@ const BoardService = {
     const deletedPost = await db.query(deletePostQuery, [id]);
     return deletedPost;
   },
+
+  /** 글에 달린 댓글 조회 함수
+   * 
+   * @param {Number} postId - 글 id 
+   * @returns comments
+   */
+  getPostComments: async ({ postId }) => {
+    const getCommentQuery = `
+      SELECT c.id, c.userId, u.nickname, p.id as postId, c.content, c.createdate
+      FROM comment as c
+      JOIN post as p ON p.id = c.postId
+      JOIN user as u ON u.id = c.userId
+      WHERE c.postId = ?
+      AND c.blind = 0
+    `;
+    const comments = await db.query(getCommentQuery, [postId]);
+    return comments[0];
+  },
 };
 
 

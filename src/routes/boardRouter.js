@@ -49,5 +49,10 @@ boardRouter.delete(
   boardController.deletePost
 );
 
+boardRouter.get(
+  "/boards/:postId/comments",
+  boardController.getPostComments
+)
+
 
 export { boardRouter };
