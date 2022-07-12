@@ -214,6 +214,15 @@ const boardController = {
       const postId = req.params.postId;
 
       // 글이 존재하는지 확인
+      const isPostExist = await BoardService.findPost({ postId });
+      if (!isPostExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 게시글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
 
       const data = await BoardService.getPostComments({ postId });
       const body = {

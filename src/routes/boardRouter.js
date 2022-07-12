@@ -49,6 +49,7 @@ boardRouter.delete(
   boardController.deletePost
 );
 
+// 게시글의 댓글 조회
 boardRouter.get(
   "/boards/:postId/comments",
   boardController.getPostComments
