@@ -1,4 +1,4 @@
-import { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike } from "../services/suggestionService.js";
+import { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike, checkSuggestionExistence } from "../services/suggestionService.js";
 import { response, errResponse } from "../../config/response.js";
 
 //전체 건의 게시글 조회
@@ -19,8 +19,13 @@ const showSuggestionBoard = async (req, res) => {
     try {
         const userId = req.currentUserId;
         const suggestionId = req.params.id;
-        const suggestionBoard = await getSuggestionBoard(userId, suggestionId);
 
+        const Existence = await checkSuggestionExistence(suggestionId);
+        if(Existence[0].length <= 0) {
+            return res.send(response({ "code": 200, "message": '존재하지 않는 게시글입니다.' }));
+        }
+
+        const suggestionBoard = await getSuggestionBoard(userId, suggestionId);
         return res.send(response({ "code": 200, "message": '건의 게시글 조회에 성공하였습니다.' }, suggestionBoard));
     } catch (err) {
         console.log(err);

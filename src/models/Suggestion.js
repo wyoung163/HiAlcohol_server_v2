@@ -30,6 +30,18 @@ async function getAllSuggestions(userId) {
     return allSuggestions;
 }
 
+
+async function selectSuggestionExistence(suggestionId) {
+    const selectSuggestionExistenceQuery = `
+        select id 
+        from suggestion
+        where id = ?
+    `;
+    const Existence = await db.query(selectSuggestionExistenceQuery, [suggestionId]);
+    return Existence;
+}
+
+
 //특정 건의 게시글 조회
 async function getSuggestion(userId, suggestionId) {
     const getSuggestionQuery = `
@@ -139,5 +151,6 @@ export {
     insertSuggestion,
     updateSuggestion,
     insertLike,
-    deleteLike
+    deleteLike,
+    selectSuggestionExistence
 };

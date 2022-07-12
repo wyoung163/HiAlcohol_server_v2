@@ -1,4 +1,4 @@
-import { getAllSuggestions, getSuggestion, insertSuggestion, updateSuggestion, insertLike, deleteLike } from "../models/Suggestion.js";
+import { getAllSuggestions, getSuggestion, insertSuggestion, updateSuggestion, insertLike, deleteLike, selectSuggestionExistence } from "../models/Suggestion.js";
 
 //전체 건의 게시글 조회
 const getSuggestions = async (userId) => {
@@ -11,10 +11,16 @@ const getSuggestions = async (userId) => {
     return allSuggestions;
 }
 
-//특정 건의 게시글 조회
+//특정 건의 게시글 존재 확인
 const getSuggestionBoard = async (userId, suggestionId) => {
     const suggestionBoard = await getSuggestion(userId, suggestionId);
     return suggestionBoard;
+}
+
+//특정 건의 게시글 조회
+const checkSuggestionExistence = async (suggestionId) => {
+    const Existence = await selectSuggestionExistence(suggestionId);
+    return Existence;
 }
 
 //건의 게시글 작성
@@ -41,4 +47,4 @@ const deleteSuggestionLike = async (suggestionId, userId) => {
     return canceledLike;
 }
 
-export { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike };
+export { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike, checkSuggestionExistence };
