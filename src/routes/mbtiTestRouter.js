@@ -4,6 +4,6 @@ import { mbtiTestValidator } from "../middlewares/express-validator/index.js";
 
 const mbtiTestRouter = Router();
 
-mbtiTestRouter.get("/mbti",  mbtiTestValidator.checkTestAnswers, showTestResult);
+mbtiTestRouter.get("/mbti", mbtiTestValidator.checkTestAnswers, showTestResult);
 
 export { mbtiTestRouter };
