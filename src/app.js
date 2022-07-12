@@ -9,6 +9,7 @@ import { searchRouter } from "./routes/searchRouter.js";
 import { suggestionRouter } from "./routes/suggestionRouter.js";
 import { recipeRouter } from "./routes/recipeRouter.js";
 import { reportRouter } from "./routes/reportRouter.js";
+import { likeRouter } from "./routes/likeRouter.js";
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use('/cocktails', searchRouter);
 app.use(suggestionRouter);
 app.use(recipeRouter);
 app.use(reportRouter);
+app.use(likeRouter);
 
 app.use(errorMiddleware);
 
