@@ -136,8 +136,23 @@ const BoardService = {
       where id = ?
     `;
     const updateComment = await db.query(updateCommentQuery, [content, id]);
-    console.log("updateComment =====", updateComment);
     return updateComment;
+  },
+
+  /** 댓글이 존재하는지 확인하는 함수
+   * 
+   * @returns 
+   */
+  getComment: async ({ id }) => {
+    const getCommentQuery = `
+      SELECT *
+      FROM comment
+      WHERE id = ?
+      AND blind = 0
+    `;
+    const comment = await db.query(getCommentQuery, [id]);
+    console.log("comment ===", comment);
+    return comment[0][0];
   },
 
   /** 글에 달린 댓글 조회 함수

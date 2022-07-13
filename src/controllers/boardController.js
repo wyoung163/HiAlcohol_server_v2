@@ -272,7 +272,25 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      //! 댓글이 존재하는지 확인
+      // 댓글이 존재하는지 확인
+      const isCommentExist = await BoardService.getComment({ id });
+      if (!isCommentExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 댓글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      if (isCommentExist.userId !== userId) {
+        const body = {
+          code: 403,
+          message: "본인이 작성한 댓글만 수정 가능합니다.",
+        };
+
+        return res.status(403).send({ error: body });
+      }
 
       // 댓글 수정
       await BoardService.updateComment({ id, content });
