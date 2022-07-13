@@ -76,8 +76,16 @@ const boardController = {
   // 게시글 전체 조회
   getPostList: async (req, res, next) => {
     try { 
-      let data = await BoardService.findPostList();
+      const option = req.query.option ?? null;
+      let data;
 
+      switch (option) { 
+        case "like":
+          data = await BoardService.findPostByLike();
+        default:
+          data = await BoardService.findPostList();
+      }
+        
       const body = {
         code: 200,
         message: "게시판 조회에 성공하였습니다.",

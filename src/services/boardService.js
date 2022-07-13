@@ -49,7 +49,22 @@ const BoardService = {
     return createdPost[0][0];
   },
 
-  /** 전체 글 조회 함수
+   /** 전체 글 좋아요 내림차순 조회 함수
+   * 
+   * @returns postList
+   */
+    findPostByLike: async () => { 
+      const getPostListQuery = `
+        SELECT p.id, u.nickname, p.title, p.content, p.createdate
+        FROM post as p
+        JOIN user as u ON u.id = p.userId
+        WHERE blind = 0
+      `;
+      const [postList] = await db.query(getPostListQuery);
+      return postList;
+    },
+
+  /** 전체 글 createdate 내림차순 조회 함수
    * 
    * @returns postList
    */
@@ -59,6 +74,7 @@ const BoardService = {
       FROM post as p
       JOIN user as u ON u.id = p.userId
       WHERE blind = 0
+      ORDER BY p.createdate DESC
     `;
     const [postList] = await db.query(getPostListQuery);
     return postList;
