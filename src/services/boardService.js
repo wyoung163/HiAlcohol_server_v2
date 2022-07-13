@@ -1,6 +1,8 @@
 import { db } from "../../config/db.js";
 
 const BoardService = {
+  /********** 게시글 **********/
+
   /** 게시글 생성 함수
    * 
    * @param {Number} userId - 글 쓴 유저
@@ -101,6 +103,24 @@ const BoardService = {
     `;
     const deletedPost = await db.query(deletePostQuery, [id]);
     return deletedPost;
+  },
+
+  
+  /********** 댓글 **********/
+
+  /** 댓글 작성 함수
+   * 
+   * @param {Number} postId - 글 id
+   * @param {String} content - 댓글 내용
+   * @retrun createComment 
+   */
+  postComment: async ({ userId, postId, content }) => {
+    const createCommentQuery = `
+      insert into comment(userId, postId, content, createdate)
+      values(?, ?, ?, now())
+    `;
+    const createComment = await db.query(createCommentQuery, [userId, postId, content]);
+    return createComment;
   },
 
   /** 글에 달린 댓글 조회 함수

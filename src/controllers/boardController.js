@@ -1,6 +1,8 @@
 import { BoardService } from "../services/boardService.js";
 
 const boardController = {
+  /********** 게시글 **********/
+
   // 글 작성
   createPost: async (req, res, next) => {
     try {
@@ -118,6 +120,7 @@ const boardController = {
     }
   },
 
+  // 게시글 수정
   editPost: async (req, res, next) => { 
     try { 
       const userId = req.currentUserId;
@@ -171,6 +174,7 @@ const boardController = {
     }
   },
 
+  // 게시글 삭제
   deletePost: async (req, res, next) => {
     try {
       const userId = req.currentUserId;
@@ -208,7 +212,46 @@ const boardController = {
     }
   },
 
-  // 게시글의 댓글 조회
+
+  /********** 댓글 **********/
+
+  // 댓글 작성
+  createComment: async (req, res, next) => {
+    try {
+      // const userId = req.currentUserId;
+      const userId = 1;
+      const postId = req.params.postId;
+      const content = req.body.content;
+
+      const isPostExist = await BoardService.findPost({ postId });
+      if (!isPostExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 게시글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      await BoardService.postComment({ userId, postId, content });
+
+      const data = await BoardService.getPostComments({ postId });
+
+      const body = {
+        code: 201,
+        message: "댓글 작성에 성공하였습니다.",
+        data,
+      };
+
+      return res.status(200).send(body);
+
+
+    } catch (err) { 
+      next(err); 
+    }  
+  },
+
+  // 댓글 조회
   getPostComments: async (req, res, next) => {
     try {
       const postId = req.params.postId;

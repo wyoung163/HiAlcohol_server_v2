@@ -7,6 +7,8 @@ import imageUpload from "../utils/s3.js";
 
 const boardRouter = Router();
 
+/********** 게시글 **********/
+
 // 게시글 작성
 boardRouter.post(
   "/boards",
@@ -49,11 +51,21 @@ boardRouter.delete(
   boardController.deletePost
 );
 
+
+/********** 댓글 **********/
+
+// 댓글 생성
+boardRouter.post(
+  "/boards/:postId/comments",
+  // loginRequired,
+  boardController.createComment
+);
+
 // 게시글의 댓글 조회
 boardRouter.get(
   "/boards/:postId/comments",
   boardController.getPostComments
-)
+);
 
 
 export { boardRouter };
