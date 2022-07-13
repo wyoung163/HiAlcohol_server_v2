@@ -70,14 +70,14 @@ boardRouter.get(
 // 댓글 수정
 boardRouter.put(
   "/boards/:postId/comments/:id",
-  // loginRequired,
+  loginRequired,
   boardController.editComment
 );
 
 // 댓글 삭제
 boardRouter.delete(
   "/boards/:postId/comments/:id",
-  // loginRequired,
+  loginRequired,
   boardController.deleteComment
 );
 

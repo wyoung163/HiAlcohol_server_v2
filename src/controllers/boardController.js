@@ -343,8 +343,7 @@ const boardController = {
 
   deleteComment: async (req, res, next) => {  
     try { 
-      // const userId = req.currentUserId;
-      const userId = 1;
+      const userId = req.currentUserId;
       const postId = req.params.postId;
       const id = req.params.id;
       
@@ -378,7 +377,7 @@ const boardController = {
       if (isCommentExist.userId !== userId) {
         const body = {
           code: 403,
-          message: "본인이 작성한 댓글만 수정 가능합니다.",
+          message: "본인이 작성한 댓글만 삭제 가능합니다.",
         };
 
         return res.status(403).send({ error: body });

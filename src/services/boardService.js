@@ -136,7 +136,6 @@ const BoardService = {
       AND blind = 0
     `;
     const comment = await db.query(getCommentQuery, [id]);
-    console.log("comment ===", comment);
     return comment[0][0];
   },
 
@@ -184,7 +183,6 @@ const BoardService = {
       where id = ?
     `;
     const deleteComment = await db.query(deleteCommentQuery, [id]);
-    console.log("deleteComment =====", deleteComment);
     return deleteComment;
   },
 };
