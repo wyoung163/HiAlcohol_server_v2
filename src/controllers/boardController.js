@@ -274,6 +274,8 @@ const boardController = {
 
       // 댓글이 존재하는지 확인
       const isCommentExist = await BoardService.getComment({ id });
+
+      // 댓글이 없다면 오류
       if (!isCommentExist) {
         const body = {
           code: 404,
@@ -283,6 +285,7 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
+      // 댓글을 쓴 유저와 현재 로그인 유저가 다르다면 오류
       if (isCommentExist.userId !== userId) {
         const body = {
           code: 403,
