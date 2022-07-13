@@ -1,4 +1,14 @@
-import { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike, checkSuggestionExistence } from "../services/suggestionService.js";
+import { 
+    getSuggestions, 
+    getSuggestionsForAdmin,
+    checkSuggestionExistence,
+    getSuggestionBoard, 
+    getSuggestionBoardForAdmin,
+    insertSuggestionBoard, 
+    updateSuggestionBoard, 
+    insertSuggestionLike, 
+    deleteSuggestionLike, 
+ } from "../services/suggestionService.js";
 import { response, errResponse } from "../../config/response.js";
 
 //전체 건의 게시글 조회
@@ -6,6 +16,19 @@ const showSuggestions = async (req, res) => {
     try {
         const userId = req.currentUserId;
         const suggestions = await getSuggestions(userId);
+
+        return res.send(response({ "code": 200, "message": '건의 게시판 접근에 성공하였습니다.' }, suggestions));
+    } catch (err) {
+        console.log(err);
+        return res.send(errResponse({ "code": 400, "message": '건의 게시판 접근에 실패하였습니다.' }));
+    }
+}
+
+// <관리자> 전체 건의 게시글 조회
+const showSuggestionsForAdmin = async (req, res) => {
+    try {
+        // const userId = req.currentUserId;
+        const suggestions = await getSuggestionsForAdmin();
 
         return res.send(response({ "code": 200, "message": '건의 게시판 접근에 성공하였습니다.' }, suggestions));
     } catch (err) {
@@ -26,6 +49,25 @@ const showSuggestionBoard = async (req, res) => {
         }
 
         const suggestionBoard = await getSuggestionBoard(userId, suggestionId);
+        return res.send(response({ "code": 200, "message": '건의 게시글 조회에 성공하였습니다.' }, suggestionBoard));
+    } catch (err) {
+        console.log(err);
+        return res.send(errResponse({ "code": 400, "message": '건의 게시글 조회에 실패하였습니다.' }));
+    }
+}
+
+//<관리자> 특정 건의 게시글 조회
+const showSuggestionBoardForAdmin = async (req, res) => {
+    try {
+        // const userId = req.currentUserId;
+        const suggestionId = req.params.id;
+
+        const Existence = await checkSuggestionExistence(suggestionId);
+        if(Existence[0].length <= 0) {
+            return res.send(response({ "code": 200, "message": '존재하지 않는 게시글입니다.' }));
+        }
+
+        const suggestionBoard = await getSuggestionBoardForAdmin(suggestionId);
         return res.send(response({ "code": 200, "message": '건의 게시글 조회에 성공하였습니다.' }, suggestionBoard));
     } catch (err) {
         console.log(err);
@@ -99,4 +141,13 @@ const cancelSuggestionLike = async (req, res) => {
     }
 }
 
-export { showSuggestions, showSuggestionBoard, addSuggestionBoard, editSuggestionBoard, addSuggestionLike, cancelSuggestionLike };
+export { 
+    showSuggestions,
+    showSuggestionsForAdmin, 
+    showSuggestionBoard, 
+    showSuggestionBoardForAdmin, 
+    addSuggestionBoard,
+    editSuggestionBoard, 
+    addSuggestionLike, 
+    cancelSuggestionLike 
+};

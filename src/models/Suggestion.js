@@ -4,7 +4,7 @@ import { db } from "../../config/db.js";
 async function getAllSuggestions(userId) {
     const getAllSuggestionsQuery = `
         select suggestion.*, count(suggestion_liked.id) 'count' from 
-        (select suggestion.id 'suggestionId', user.nickname, suggestion.title, suggestion.createdate, from suggestion, user where suggestion.userId=user.id) suggestion 
+        (select suggestion.id 'suggestionId', user.nickname, suggestion.title, suggestion.createdate from suggestion, user where suggestion.userId=user.id) suggestion 
         left join suggestion_liked on suggestion.suggestionId=suggestion_liked.suggestionId group by suggestion.suggestionId order by suggestion.createdate desc;
     `;
 
@@ -30,17 +30,28 @@ async function getAllSuggestions(userId) {
     return allSuggestions;
 }
 
+//<관리자> 전체 건의 게시글 조회
+async function getAllSuggestionsForAdmin() {
+    const getAllSuggestionsQuery = `
+        select suggestion.*, count(suggestion_liked.id) 'count' from 
+        (select suggestion.id 'suggestionId', user.nickname, suggestion.title, suggestion.createdate from suggestion, user where suggestion.userId=user.id) suggestion 
+        left join suggestion_liked on suggestion.suggestionId=suggestion_liked.suggestionId group by suggestion.suggestionId order by suggestion.createdate desc;
+    `;
 
+    const [allSuggestions] = await db.query(getAllSuggestionsQuery);
+    return allSuggestions;
+}
+
+//게시글 존재 확인
 async function selectSuggestionExistence(suggestionId) {
     const selectSuggestionExistenceQuery = `
         select id 
         from suggestion
-        where id = ?
+        where id = ?;
     `;
     const Existence = await db.query(selectSuggestionExistenceQuery, [suggestionId]);
     return Existence;
 }
-
 
 //특정 건의 게시글 조회
 async function getSuggestion(userId, suggestionId) {
@@ -74,6 +85,26 @@ async function getSuggestion(userId, suggestionId) {
         }
     }
 
+    return suggestion;
+}
+
+//<관리자> 특정 건의 게시글 조회
+async function getSuggestionForAdmin(suggestionId) {
+    const getSuggestionQuery = `
+        select s.id, u.nickname, s.title, s.content, s.createdate
+        from suggestion as s
+        join user as u on s.userId = u.id
+        where s.id = ?;
+    `;
+
+    const likeCountQuery = `
+        select count(*) as like_count from suggestion_liked
+        where suggestionId = ?;
+    `;
+
+    const [suggestion] = await db.query(getSuggestionQuery, [suggestionId]);
+    const [likeCount] = await db.query(likeCountQuery, [suggestionId]);
+    Object.assign(suggestion[0], likeCount[0]);
     return suggestion;
 }
 
@@ -147,7 +178,9 @@ async function deleteLike(suggestionId, userId) {
 
 export {
     getAllSuggestions,
+    getAllSuggestionsForAdmin,
     getSuggestion,
+    getSuggestionForAdmin,
     insertSuggestion,
     updateSuggestion,
     insertLike,

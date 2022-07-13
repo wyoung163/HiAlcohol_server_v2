@@ -1,4 +1,14 @@
-import { getAllSuggestions, getSuggestion, insertSuggestion, updateSuggestion, insertLike, deleteLike, selectSuggestionExistence } from "../models/Suggestion.js";
+import { 
+    getAllSuggestions,
+    getAllSuggestionsForAdmin,
+    getSuggestion,
+    getSuggestionForAdmin,
+    insertSuggestion,
+    updateSuggestion,
+    insertLike,
+    deleteLike,
+    selectSuggestionExistence
+ } from "../models/Suggestion.js";
 
 //전체 건의 게시글 조회
 const getSuggestions = async (userId) => {
@@ -11,16 +21,33 @@ const getSuggestions = async (userId) => {
     return allSuggestions;
 }
 
+//<관리자> 전체 건의 게시글 조회
+const getSuggestionsForAdmin = async () => {
+    let allSuggestions = await getAllSuggestionsForAdmin();
+    
+    if(allSuggestions.length == 0){
+        allSuggestions = '데이터가 존재하지 않습니다.'
+    }
+
+    return allSuggestions;
+}
+
 //특정 건의 게시글 존재 확인
+const checkSuggestionExistence = async (suggestionId) => {
+    const Existence = await selectSuggestionExistence(suggestionId);
+    return Existence;
+}
+
+//특정 건의 게시글 조회
 const getSuggestionBoard = async (userId, suggestionId) => {
     const suggestionBoard = await getSuggestion(userId, suggestionId);
     return suggestionBoard;
 }
 
-//특정 건의 게시글 조회
-const checkSuggestionExistence = async (suggestionId) => {
-    const Existence = await selectSuggestionExistence(suggestionId);
-    return Existence;
+//<관리자> 특정 건의 게시글 조회
+const getSuggestionBoardForAdmin = async (suggestionId) => {
+    const suggestionBoard = await getSuggestionForAdmin(suggestionId);
+    return suggestionBoard;
 }
 
 //건의 게시글 작성
@@ -47,4 +74,14 @@ const deleteSuggestionLike = async (suggestionId, userId) => {
     return canceledLike;
 }
 
-export { getSuggestions, getSuggestionBoard, insertSuggestionBoard, updateSuggestionBoard, insertSuggestionLike, deleteSuggestionLike, checkSuggestionExistence };
+export { 
+    getSuggestions, 
+    getSuggestionsForAdmin,
+    checkSuggestionExistence,
+    getSuggestionBoard, 
+    getSuggestionBoardForAdmin,
+    insertSuggestionBoard, 
+    updateSuggestionBoard, 
+    insertSuggestionLike, 
+    deleteSuggestionLike, 
+};
