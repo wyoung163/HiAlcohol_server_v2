@@ -67,5 +67,12 @@ boardRouter.get(
   boardController.getPostComments
 );
 
+// 댓글 수정
+boardRouter.put(
+  "/boards/:postId/comments/:id",
+  // loginRequired,
+  boardController.editComment
+);
+
 
 export { boardRouter };

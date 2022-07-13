@@ -120,7 +120,24 @@ const BoardService = {
       values(?, ?, ?, now())
     `;
     const createComment = await db.query(createCommentQuery, [userId, postId, content]);
+    console.log("createComment", createComment);
     return createComment;
+  },
+
+  /** 댓글 수정 함수
+   * 
+   * @param {Number} id - 댓글 id
+   * @param {String} content - 수정할 댓글 내용
+   * @returns 
+   */
+  updateComment: async ({ id, content }) => {
+    const updateCommentQuery = `
+      update comment set content = ?
+      where id = ?
+    `;
+    const updateComment = await db.query(updateCommentQuery, [content, id]);
+    console.log("updateComment =====", updateComment);
+    return updateComment;
   },
 
   /** 글에 달린 댓글 조회 함수

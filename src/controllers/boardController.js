@@ -1,5 +1,4 @@
 import { BoardService } from "../services/boardService.js";
-import { multer } from 'multer';
 
 const boardController = {
   /********** 게시글 **********/
@@ -16,8 +15,9 @@ const boardController = {
       // 이미지가 없다면 null로
       images = images.length === 0 ? null : JSON.stringify(images);
 
+      //! 유저가 존재하는지 확인
+
       const data = await BoardService.create({ userId, title, content, images });
-      console.log(data);
       // 문자열을 배열로 변환
       data.images = JSON.parse(data.images);
       
@@ -235,7 +235,7 @@ const boardController = {
 
       await BoardService.postComment({ userId, postId, content });
 
-      const data = await BoardService.getPostCmulter
+      const data = await BoardService.getPostComments({ postId });
 
       const body = {
         code: 201,
@@ -249,6 +249,47 @@ const boardController = {
     } catch (err) { 
       next(err); 
     }  
+  },
+
+  // 댓글 수정
+  editComment: async (req, res, next) => {
+    try {
+      const userId = req.currentUserId;
+      const postId = req.params.postId;
+      const id = req.params.id;
+      const content = req.body.content;
+
+      //! 유저가 존재하는지 확인
+
+      // 글이 존재하는지 확인
+      const isPostExist = await BoardService.findPost({ postId });
+      if (!isPostExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 게시글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      //! 댓글이 존재하는지 확인
+
+      // 댓글 수정
+      await BoardService.updateComment({ id, content });
+
+      // 댓글 전체 조회
+      const data = await BoardService.getPostComments({ postId });
+      const body = {
+        code: 200,
+        message: "댓글 수정에 성공하였습니다.",
+        data,
+      };
+
+      return res.status(200).send(body);
+
+    } catch (err) {
+      next(err);
+    }
   },
 
   // 댓글 조회
