@@ -1,4 +1,5 @@
 import { BoardService } from "../services/boardService.js";
+import { multer } from 'multer';
 
 const boardController = {
   /********** 게시글 **********/
@@ -218,8 +219,7 @@ const boardController = {
   // 댓글 작성
   createComment: async (req, res, next) => {
     try {
-      // const userId = req.currentUserId;
-      const userId = 1;
+      const userId = req.currentUserId;
       const postId = req.params.postId;
       const content = req.body.content;
 
@@ -235,7 +235,7 @@ const boardController = {
 
       await BoardService.postComment({ userId, postId, content });
 
-      const data = await BoardService.getPostComments({ postId });
+      const data = await BoardService.getPostCmulter
 
       const body = {
         code: 201,

@@ -57,7 +57,7 @@ boardRouter.delete(
 // 댓글 생성
 boardRouter.post(
   "/boards/:postId/comments",
-  // loginRequired,
+  loginRequired,
   boardController.createComment
 );
 
