@@ -74,5 +74,11 @@ boardRouter.put(
   boardController.editComment
 );
 
+// 댓글 삭제
+boardRouter.delete(
+  "/boards/:postId/comments/:id",
+  // loginRequired,
+  boardController.deleteComment
+);
 
 export { boardRouter };

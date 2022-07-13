@@ -124,21 +124,6 @@ const BoardService = {
     return createComment;
   },
 
-  /** 댓글 수정 함수
-   * 
-   * @param {Number} id - 댓글 id
-   * @param {String} content - 수정할 댓글 내용
-   * @returns 
-   */
-  updateComment: async ({ id, content }) => {
-    const updateCommentQuery = `
-      update comment set content = ?
-      where id = ?
-    `;
-    const updateComment = await db.query(updateCommentQuery, [content, id]);
-    return updateComment;
-  },
-
   /** 댓글이 존재하는지 확인하는 함수
    * 
    * @returns 
@@ -171,6 +156,36 @@ const BoardService = {
     `;
     const comments = await db.query(getCommentQuery, [postId]);
     return comments[0];
+  },
+  
+  /** 댓글 수정 함수
+   * 
+   * @param {Number} id - 댓글 id
+   * @param {String} content - 수정할 댓글 내용
+   * @returns updateComment
+   */
+   updateComment: async ({ id, content }) => {
+    const updateCommentQuery = `
+      update comment set content = ?
+      where id = ?
+    `;
+    const updateComment = await db.query(updateCommentQuery, [content, id]);
+    return updateComment;
+  },
+
+  /** 댓글 삭제 함수
+   * 
+   * @param {Number} id - 댓글 id
+   * @returns comment
+   */
+  removeComment: async ({ id }) => {
+    const deleteCommentQuery = `
+      update comment set blind = 2
+      where id = ?
+    `;
+    const deleteComment = await db.query(deleteCommentQuery, [id]);
+    console.log("deleteComment =====", deleteComment);
+    return deleteComment;
   },
 };
 

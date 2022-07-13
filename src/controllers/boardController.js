@@ -251,6 +251,35 @@ const boardController = {
     }  
   },
 
+  // 댓글 조회
+  getPostComments: async (req, res, next) => {
+    try {
+      const postId = req.params.postId;
+
+      // 글이 존재하는지 확인
+      const isPostExist = await BoardService.findPost({ postId });
+      if (!isPostExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 게시글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      const data = await BoardService.getPostComments({ postId });
+      const body = {
+        code: 200,
+        message: "댓글 조회에 성공하였습니다.",
+        data,
+      };
+
+      return res.status(200).send(body);
+    } catch (err) {
+      next(err);
+    }
+  },
+
   // 댓글 수정
   editComment: async (req, res, next) => {
     try {
@@ -307,16 +336,19 @@ const boardController = {
       };
 
       return res.status(200).send(body);
-
     } catch (err) {
       next(err);
     }
   },
 
-  // 댓글 조회
-  getPostComments: async (req, res, next) => {
-    try {
+  deleteComment: async (req, res, next) => {  
+    try { 
+      // const userId = req.currentUserId;
+      const userId = 1;
       const postId = req.params.postId;
+      const id = req.params.id;
+      
+      //! 유저가 존재하는지 확인
 
       // 글이 존재하는지 확인
       const isPostExist = await BoardService.findPost({ postId });
@@ -329,11 +361,34 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const data = await BoardService.getPostComments({ postId });
+      // 댓글이 존재하는지 확인
+      const isCommentExist = await BoardService.getComment({ id });
+
+      // 댓글이 없다면 오류
+      if (!isCommentExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 댓글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      // 댓글을 쓴 유저와 현재 로그인 유저가 다르다면 오류
+      if (isCommentExist.userId !== userId) {
+        const body = {
+          code: 403,
+          message: "본인이 작성한 댓글만 수정 가능합니다.",
+        };
+
+        return res.status(403).send({ error: body });
+      }
+      
+      await BoardService.removeComment({ id });
+
       const body = {
         code: 200,
-        message: "댓글 조회에 성공하였습니다.",
-        data,
+        message: "댓글 삭제에 성공하였습니다.",
       };
 
       return res.status(200).send(body);
