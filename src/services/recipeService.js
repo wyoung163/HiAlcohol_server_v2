@@ -1,4 +1,4 @@
-import { insertRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo, selectExistCocktail } from "../models/Recipe.js";
+import { insertRecipeInfo, updateRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo, selectExistCocktail } from "../models/Recipe.js";
 
 //재료 존재 여부 확인
 const selectMaterials = async (materials) => {
@@ -18,6 +18,12 @@ const insertRecipe = async (recipeInfo) => {
     return addedRecipe;
 }
 
+//기존 레시피 수정
+const updateRecipe = async (recipeInfo) => {
+    const editedRecipe = await updateRecipeInfo(recipeInfo);
+    return editedRecipe;
+}
+
 //새로운 레시피+재료 추가
 const insertInclusions = async (recipeId, materialIds) => {
     const addedInclusions = await insertInclusionInfo(recipeId, materialIds);
@@ -30,4 +36,4 @@ const checkExistence = async (cocktail) => {
     return duplication;
 }
 
-export { selectMaterials, insertMaterials, insertRecipe, insertInclusions, checkExistence };
+export { selectMaterials, insertMaterials, insertRecipe, updateRecipe, insertInclusions, checkExistence };

@@ -49,6 +49,17 @@ async function insertRecipeInfo(recipeInfo) {
     return {recipeId, addedRecipe};
 }
 
+//추가한 레시피 id, 레시피 정보 반환
+async function updateRecipeInfo(recipeInfo) {
+    const insertRecipeInfoQuery = `
+        update recipe set cocktail = ?, rate = ?, content = ?, imageUrl =?
+    `;
+    const [editedRecipe] = await db.query(insertRecipeInfoQuery, [recipeInfo.cocktail, recipeInfo.rate, recipeInfo.content]);
+
+    const recipeId = editedRecipe.insertId;
+    return {recipeId, editedRecipe};
+}
+
 //추가한 레시피+재료 정보 반환
 async function insertInclusionInfo(recipeId, materialIds) {
     let addedInclusions = [];
@@ -82,6 +93,7 @@ export {
     selectMaterialInfo,
     insertMaterialInfo, 
     insertRecipeInfo,
+    updateRecipeInfo,
     insertInclusionInfo,
     selectExistCocktail
 };
