@@ -189,7 +189,7 @@ async function updateBlindComment(postId, commentId) {
     }
 }
 
-//게시글 숨김 처리 확인
+//게시글 숨김 처리 관리
 async function updateBlindBoard(postId) {
     let isBlind = '';
     const checkBlindQuery = `
