@@ -26,7 +26,6 @@ const updateBlindBoardQuery = `
     where id =  ?; 
 `;
 
-
 //신고된 게시글
 async function selectBoardReports() {
     var count = [];
