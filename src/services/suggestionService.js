@@ -11,8 +11,8 @@ import {
  } from "../models/Suggestion.js";
 
 //전체 건의 게시글 조회
-const getSuggestions = async (userId) => {
-    let allSuggestions = await getAllSuggestions(userId);
+const getSuggestions = async (userId, option) => {
+    let allSuggestions = await getAllSuggestions(userId, option);
     
     if(allSuggestions.length == 0){
         allSuggestions = '데이터가 존재하지 않습니다.'

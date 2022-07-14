@@ -15,7 +15,8 @@ import { response, errResponse } from "../../config/response.js";
 const showSuggestions = async (req, res) => {
     try {
         const userId = req.currentUserId;
-        const suggestions = await getSuggestions(userId);
+        const option = req.query.option;
+        const suggestions = await getSuggestions(userId, option);
 
         return res.send(response({ "code": 200, "message": '건의 게시판 접근에 성공하였습니다.' }, suggestions));
     } catch (err) {
