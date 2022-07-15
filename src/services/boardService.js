@@ -70,10 +70,12 @@ const BoardService = {
    */
   findPostList: async () => { 
     const getPostListQuery = `
-      SELECT p.id, u.nickname, p.title, p.content, p.createdate
+      SELECT p.id, u.nickname, p.title, p.content, p.createdate, IFNULL(COUNT(*), 0) as likes
       FROM post as p
-      JOIN user as u ON u.id = p.userId
+      JOIN liked as l ON l.postId = p.id
+      RIGHT JOIN user as u ON u.id = p.userId
       WHERE blind = 0
+      GROUP BY l.postId
       ORDER BY p.createdate DESC
     `;
     const [postList] = await db.query(getPostListQuery);
@@ -112,6 +114,11 @@ const BoardService = {
     return updatedPost;  
   },
 
+  /** 글 삭제 함수
+   * 
+   * @param {id} - 글 id 
+   * @returns deletedPost
+   */
   removePost: async ({ id }) => {
     const deletePostQuery = `
       update post set updatedate = now(), blind = 2
