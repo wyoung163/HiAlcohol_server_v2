@@ -22,8 +22,8 @@ const getSuggestions = async (userId, option) => {
 }
 
 //<관리자> 전체 건의 게시글 조회
-const getSuggestionsForAdmin = async () => {
-    let allSuggestions = await getAllSuggestionsForAdmin();
+const getSuggestionsForAdmin = async (option) => {
+    let allSuggestions = await getAllSuggestionsForAdmin(option);
     
     if(allSuggestions.length == 0){
         allSuggestions = '데이터가 존재하지 않습니다.'

@@ -29,7 +29,8 @@ const showSuggestions = async (req, res) => {
 const showSuggestionsForAdmin = async (req, res) => {
     try {
         // const userId = req.currentUserId;
-        const suggestions = await getSuggestionsForAdmin();
+        const option = req.query.option;
+        const suggestions = await getSuggestionsForAdmin(option);
 
         return res.send(response({ "code": 200, "message": '건의 게시판 접근에 성공하였습니다.' }, suggestions));
     } catch (err) {
