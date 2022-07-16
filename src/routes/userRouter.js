@@ -43,5 +43,12 @@ userRouter.get(
   userController.findUserBoard
 );
 
+// 회원의 좋아요 목록 조회
+userRouter.get(
+  "/users/likes",
+  // loginRequired,
+  userController.findUserLike
+);
+
 
 export { userRouter };
