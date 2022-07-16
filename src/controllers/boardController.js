@@ -78,10 +78,11 @@ const boardController = {
     try { 
       const option = req.query.option ?? null;
       let data;
-
+      
       switch (option) { 
         case "like":
           data = await BoardService.findPostByLike();
+          break;
         default:
           data = await BoardService.findPostList();
       }
