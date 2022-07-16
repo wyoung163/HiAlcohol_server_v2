@@ -14,4 +14,26 @@ export default {
     notFoundValidate,
     validate,
   ],
+
+  checkId: [
+    check("id")
+      .trim()
+      .isLength()
+      .exists()
+      .withMessage("parameter 값으로 id를 입력해주세요.")
+      .bail(),
+    notFoundValidate,
+    validate,
+  ],
+
+  checkPostId: [
+    check("postId")
+      .trim()
+      .isLength()
+      .exists()
+      .withMessage("parameter 값으로 postId를 입력해주세요.")
+      .bail(),
+    notFoundValidate,
+    validate,
+  ],
 };

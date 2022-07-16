@@ -33,6 +33,7 @@ boardRouter.get(
 // 게시글 하나만 조회
 boardRouter.get(
   "/boards/:id",
+  boardValidator.checkId,
   boardController.getPost
 );
 
@@ -41,6 +42,7 @@ boardRouter.put(
   "/boards/:id",
   loginRequired,
   // imageUpload.array("images"),
+  boardValidator.checkId,
   boardController.editPost
 );
 
@@ -48,6 +50,7 @@ boardRouter.put(
 boardRouter.delete(
   "/boards/:id",
   loginRequired,
+  boardValidator.checkId,
   boardController.deletePost
 );
 
@@ -58,12 +61,14 @@ boardRouter.delete(
 boardRouter.post(
   "/boards/:postId/comments",
   loginRequired,
+  boardValidator.checkPostId,
   boardController.createComment
 );
 
 // 게시글의 댓글 조회
 boardRouter.get(
   "/boards/:postId/comments",
+  boardValidator.checkPostId,
   boardController.getPostComments
 );
 
@@ -71,6 +76,7 @@ boardRouter.get(
 boardRouter.put(
   "/boards/:postId/comments/:id",
   loginRequired,
+  boardValidator.checkPostId,
   boardController.editComment
 );
 
@@ -78,6 +84,7 @@ boardRouter.put(
 boardRouter.delete(
   "/boards/:postId/comments/:id",
   loginRequired,
+  boardValidator.checkPostId,
   boardController.deleteComment
 );
 
