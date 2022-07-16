@@ -4,6 +4,7 @@ import { loginRequired } from "../middlewares/loginRequired.js";
 import { userValidator } from "../middlewares/express-validator/index.js";
 import { userController } from "../controllers/userController.js";
 import imageUpload from "../utils/s3.js";
+import user from "../middlewares/express-validator/user.js";
 
 const userRouter = Router();
 
@@ -33,6 +34,13 @@ userRouter.put(
   loginRequired,
   imageUpload.single("profile_url"),
   userController.updateUserImage
+);
+
+// 회원의 꿀조합 게시글 목록 조회
+userRouter.get(
+  "/users/boards",
+  // loginRequired,
+  userController.findUserBoard
 );
 
 

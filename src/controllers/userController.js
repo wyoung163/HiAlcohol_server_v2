@@ -105,6 +105,36 @@ const userController = {
       next(err);
     }
   },
+
+  // 회원의 꿀조합 게시글 목록 조회
+  findUserBoard: async (req, res, next) => { 
+    try {
+      // const id = req.currentUserId;
+      const id = 1;
+      
+      const isUserExist = await UserService.getUserInfo({ id });
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      const data = await UserService.getUserBoard({ id });
+      
+      const body = {
+        code: 200,
+        message: "게시글 조회에 성공하였습니다.",
+        data,
+      };
+      
+      return res.status(200).send(body);
+    } catch (err) { 
+      next(err);
+    }
+  },
 };
 
 

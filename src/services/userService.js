@@ -26,7 +26,7 @@ const UserService = {
     });
 
     let userData = {
-      kakaoid:  kakaoData.data.id,
+      kakaoid: kakaoData.data.id,
       profile_url: kakaoData.data.kakao_account.profile.thumbnail_image_url,
       nickname: kakaoData.data.kakao_account.profile.nickname,
     };
@@ -127,6 +127,24 @@ const UserService = {
     const updatedUser = await db.query(getUpdatedUserQuery, [id]);
     return updatedUser[0];
   },
+
+  /** 회원 id로 꿀조합 게시글 조회하는 함수
+   * 
+   * @param {Number} id - 회원 id
+   * @returns boardList
+   */
+  getUserBoard: async ({ id }) => { 
+    const getUserBoardQuery = `
+      SELECT p.id postId, u.id userId, u.nickname, p.title, p.createdate
+      FROM post as p
+      JOIN user as u
+      ON p.userId = u.id
+      AND u.id = ?
+      ORDER BY p.createdate DESC
+    `;
+    const [userPosts] = await db.query(getUserBoardQuery, [id]);
+    return userPosts;
+  }, 
 };
 
 
