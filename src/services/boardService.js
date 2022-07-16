@@ -152,7 +152,6 @@ const BoardService = {
       values(?, ?, ?, now())
     `;
     const createComment = await db.query(createCommentQuery, [userId, postId, content]);
-    console.log("createComment", createComment);
     return createComment;
   },
 
