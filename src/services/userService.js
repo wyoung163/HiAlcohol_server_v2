@@ -26,7 +26,7 @@ const UserService = {
     });
 
     let userData = {
-      kakaoid:  kakaoData.data.id,
+      kakaoid: kakaoData.data.id,
       profile_url: kakaoData.data.kakao_account.profile.thumbnail_image_url,
       nickname: kakaoData.data.kakao_account.profile.nickname,
     };
@@ -110,6 +110,12 @@ const UserService = {
     return updatedUser[0];
   },
 
+  /** 회원 프로필 이미지 수정 함수
+   * 
+   * @param {Number} id - 회원 id 
+   * @toUpdate {Object} toUpdate - 업데이트할 회원 정보 
+   * @returns updatedUser
+   */
   editUserImage: async ({ id, toUpdate }) => {
     const updateUserQuery = `
       update user set profile_url = ?
@@ -126,6 +132,43 @@ const UserService = {
 
     const updatedUser = await db.query(getUpdatedUserQuery, [id]);
     return updatedUser[0];
+  },
+
+  /** 회원 id로 꿀조합 게시글 조회하는 함수
+   * 
+   * @param {Number} id - 회원 id
+   * @returns userPosts
+   */
+  getUserBoard: async ({ id }) => { 
+    const getUserBoardQuery = `
+      SELECT p.id postId, u.id userId, u.nickname, p.title, p.createdate
+      FROM post as p
+      JOIN user as u
+      ON p.userId = u.id
+      AND u.id = ?
+      ORDER BY p.createdate DESC
+    `;
+    const [userPosts] = await db.query(getUserBoardQuery, [id]);
+    return userPosts;
+  }, 
+
+  /** 회원이 누른 좋아요 목록 조회 함수
+   * 
+   * @param {Number} id - 회원 id 
+   * @return userLikes
+   */
+  getUserLike: async ({ id }) => { 
+    const getUserBoardQuery = `
+      SELECT post.id, post.title, post.createdate, count(*) 'count', user.nickname 
+      FROM post, liked, user 
+      WHERE post.id = liked.postId
+      AND liked.userId = ? 
+      AND post.userId = user.id 
+      GROUP BY post.id
+      ORDER BY post.createdate DESC
+  `;
+    const [userLikes] = await db.query(getUserBoardQuery, [id]);
+    return userLikes;
   },
 };
 
