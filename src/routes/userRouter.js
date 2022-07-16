@@ -39,14 +39,14 @@ userRouter.put(
 // 회원의 꿀조합 게시글 목록 조회
 userRouter.get(
   "/users/boards",
-  // loginRequired,
+  loginRequired,
   userController.findUserBoard
 );
 
 // 회원의 좋아요 목록 조회
 userRouter.get(
   "/users/likes",
-  // loginRequired,
+  loginRequired,
   userController.findUserLike
 );
 

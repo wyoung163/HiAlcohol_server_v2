@@ -109,8 +109,7 @@ const userController = {
   // 회원의 꿀조합 게시글 목록 조회
   findUserBoard: async (req, res, next) => { 
     try {
-      // const id = req.currentUserId;
-      const id = 1;
+      const id = req.currentUserId;
       
       const isUserExist = await UserService.getUserInfo({ id });
       if (isUserExist.length === 0) { 
@@ -139,8 +138,7 @@ const userController = {
   // 회원의 꿀조합 게시글 목록 조회
   findUserLike: async (req, res, next) => {
     try {
-      // const id = req.currentUserId;
-      const id = 1;
+      const id = req.currentUserId;
 
       const isUserExist = await UserService.getUserInfo({ id });
       if (isUserExist.length === 0) { 
