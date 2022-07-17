@@ -21,13 +21,13 @@ const userController = {
       const id = req.currentUserId;
       const data = await UserService.getUserInfo({ id });
 
-      if (!data) { 
+      if (data.length === 0) { 
         const body = {
           code: 404,
           message: "존재하지 않는 유저입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({ error: body });
       }
 
       const body = {
@@ -43,26 +43,55 @@ const userController = {
   },
 
   // 회원 정보 수정
-  updateUserInfo: async (req, res, next) => { 
+  updateUserNickname: async (req, res, next) => { 
     try { 
       const id = req.currentUserId;
-      const profile_url = req.file?.profile_url;
       const nickname = req.body.nickname;
-
       const toUpdate = {
-        profile_url,
         nickname,
       };
 
-      const data = await UserService.editUserInfo({ id, toUpdate });
+      const data = await UserService.editUserNickname({ id, toUpdate });
 
-      if (!data) { 
+      if (data.length === 0) { 
         const body = {
           code: 404,
           message: "존재하지 않는 유저입니다.",
         };
 
-        return res.status(404).send(body);
+        return res.status(404).send({ error: body });
+      }
+
+      const body = {
+        code: 200,
+        message: "회원 정보 수정에 성공하였습니다.",
+        data,
+      };
+
+      return res.status(200).send(body);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  updateUserImage: async (req, res, next) => { 
+    try { 
+      const id = req.currentUserId;
+      const profile_url = req.file?.location ?? null;
+      
+      const toUpdate = {
+        profile_url,
+      };
+
+      const data = await UserService.editUserImage({ id, toUpdate });
+
+      if (data.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
       }
 
       const body = {
