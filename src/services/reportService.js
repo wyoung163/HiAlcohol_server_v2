@@ -33,27 +33,29 @@ const insertBoardReport = async (postId, userId) => {
     return reportedBoard;
 }
 
+//댓글 신고 중복 확인
 const checkCommentDuplication = async (postId, commentId, userId) => {
     const duplication = await checkCommentExistence(postId, commentId, userId);
     return duplication;
 }
 
+//게시글 신고 중복 확인
 const checkBoardDuplication = async (postId, userId) => {
     const duplication = await checkBoardExistence(postId, userId);
     return duplication;
 }
 
+//댓글 숨김 처리 관리
 const updateCommentBlind = async (postId, commentId) => {
     const isBlind = await updateBlindComment(postId, commentId);
     return isBlind;
 }
 
+//게시글 숨김 처리 관리
 const updateBoardBlind = async (postId) => {
     const isBlind = await updateBlindBoard(postId);
     return isBlind;
 }
-
-
 
 export { 
     selectreportedBoards, 
