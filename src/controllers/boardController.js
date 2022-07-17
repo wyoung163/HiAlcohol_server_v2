@@ -1,3 +1,4 @@
+import { UserService } from "../services/userService.js";
 import { BoardService } from "../services/boardService.js";
 
 const boardController = {
@@ -15,7 +16,16 @@ const boardController = {
       // 이미지가 없다면 null로
       images = images.length === 0 ? null : JSON.stringify(images);
 
-      //! 유저가 존재하는지 확인
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
 
       const data = await BoardService.create({ userId, title, content, images });
       // 문자열을 배열로 변환
@@ -78,10 +88,11 @@ const boardController = {
     try { 
       const option = req.query.option ?? null;
       let data;
-
+      
       switch (option) { 
         case "like":
           data = await BoardService.findPostByLike();
+          break;
         default:
           data = await BoardService.findPostList();
       }
@@ -137,6 +148,17 @@ const boardController = {
       const title = req.body.title;
       const content = req.body.content;
 
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
       const toUpdate = {
         title,
         content,
@@ -189,6 +211,18 @@ const boardController = {
       const userId = req.currentUserId;
       const id = req.params.id;
 
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
       const isPostExist = await BoardService.findPost({ postId: id });
       if (!isPostExist) {
         const body = {
@@ -230,6 +264,18 @@ const boardController = {
       const userId = req.currentUserId;
       const postId = req.params.postId;
       const content = req.body.content;
+
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+
+      // 유저가 존재하는지 확인
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
 
       const isPostExist = await BoardService.findPost({ postId });
       if (!isPostExist) {
@@ -296,7 +342,17 @@ const boardController = {
       const id = req.params.id;
       const content = req.body.content;
 
-      //! 유저가 존재하는지 확인
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
 
       // 글이 존재하는지 확인
       const isPostExist = await BoardService.findPost({ postId });
@@ -355,7 +411,17 @@ const boardController = {
       const postId = req.params.postId;
       const id = req.params.id;
       
-      //! 유저가 존재하는지 확인
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
 
       // 글이 존재하는지 확인
       const isPostExist = await BoardService.findPost({ postId });

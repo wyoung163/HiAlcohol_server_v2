@@ -18,7 +18,7 @@ const BoardService = {
     const post = await db.query(createQuery, [userId, title, content, images]);
     const createdPostId = post[0].insertId;
     const getCreatedPostQuery = `
-      select p.id, u.nickname, p.title, p.content, p.images, p.createdate
+      select p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
       from post as p
       join user as u on u.id = p.userId
       where p.id = ?
@@ -55,10 +55,16 @@ const BoardService = {
    */
     findPostByLike: async () => { 
       const getPostListQuery = `
-        SELECT p.id, u.nickname, p.title, p.content, p.createdate
-        FROM post as p
-        JOIN user as u ON u.id = p.userId
-        WHERE blind = 0
+        SELECT post.*, count(liked.postId) 'likes'
+        FROM (
+          SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+          FROM post, user
+          WHERE post.userId = user.id
+          AND post.blind = 0
+        ) post
+        LEFT JOIN liked ON post.id = liked.postId
+        GROUP BY liked.postId
+        ORDER BY likes DESC
       `;
       const [postList] = await db.query(getPostListQuery);
       return postList;
@@ -70,11 +76,16 @@ const BoardService = {
    */
   findPostList: async () => { 
     const getPostListQuery = `
-      SELECT p.id, u.nickname, p.title, p.content, p.createdate
-      FROM post as p
-      JOIN user as u ON u.id = p.userId
-      WHERE blind = 0
-      ORDER BY p.createdate DESC
+      SELECT post.*, count(liked.postId) 'likes'
+      FROM (
+        SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+        FROM post, user
+        WHERE post.userId = user.id
+        AND post.blind = 0
+      ) post
+      LEFT JOIN liked ON post.id = liked.postId
+      GROUP BY liked.postId
+      ORDER BY post.createdate DESC
     `;
     const [postList] = await db.query(getPostListQuery);
     return postList;
@@ -112,6 +123,11 @@ const BoardService = {
     return updatedPost;  
   },
 
+  /** 글 삭제 함수
+   * 
+   * @param {id} - 글 id 
+   * @returns deletedPost
+   */
   removePost: async ({ id }) => {
     const deletePostQuery = `
       update post set updatedate = now(), blind = 2
@@ -136,7 +152,6 @@ const BoardService = {
       values(?, ?, ?, now())
     `;
     const createComment = await db.query(createCommentQuery, [userId, postId, content]);
-    console.log("createComment", createComment);
     return createComment;
   },
 
