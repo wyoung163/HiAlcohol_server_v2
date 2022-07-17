@@ -7,7 +7,7 @@ import  imageUpload  from "../utils/s3.js";
 
 const recipeRouter = Router();
 
-// recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), addRecipes);
+recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), addRecipes);
 recipeRouter.patch("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), editRecipes);
 
 export { recipeRouter };
