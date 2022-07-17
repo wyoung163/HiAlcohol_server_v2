@@ -8,15 +8,13 @@ const addRecipes = async (req, res) => {
         const rate = req.body.rate;
         const content = req.body.content;
         const image = req.file?.location ?? null;
-        // console.log(req.file);
-        // console.log(image);
         const recipeInfo = {cocktail, rate, content, image};
         let addedMaterialIds;
         let materialIds;
 
         //이미 존재하는 레시피인지 확인
         const duplication = await checkExistence(cocktail);
-        if(duplication){
+        if(duplication.length != 0){
             return res.send(response({"code":400, "message": '이미 레시피가 존재합니다.'}));
         }
 
@@ -51,7 +49,6 @@ const addRecipes = async (req, res) => {
 
 const editRecipes = async (req, res) => {
     try {
-        console.log(req.file);
         const cocktail = req.body.cocktail;
         const materials = req.body.materials;
         const rate = req.body.rate;

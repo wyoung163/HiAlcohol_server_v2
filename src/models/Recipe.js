@@ -40,17 +40,17 @@ async function insertMaterialInfo(materials) {
 //추가한 레시피 id, 레시피 정보 반환
 async function insertRecipeInfo(recipeInfo) {
     //디폴트 이미지
-    // const defaultImage = 'defaultCocktailImage';
-    // if(image == null){
-    //     image = defaultImage;
-    // }
+    const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1658031520811';
+    if(recipeInfo.image == null){
+        recipeInfo.image = defaultImage;
+    }
 
     const insertRecipeInfoQuery = `
         insert into recipe(cocktail, rate, content, image)
         values(?, ?, ?, ?)
     `;
 
-    const [addedRecipe] = await db.query(insertRecipeInfoQuery, [recipeInfo.cocktail, recipeInfo.rate, recipeInfo.content]);
+    const [addedRecipe] = await db.query(insertRecipeInfoQuery, [recipeInfo.cocktail, recipeInfo.rate, recipeInfo.content, recipeInfo.image]);
     const recipeId = addedRecipe.insertId;
     console.log(recipeId);
     return {recipeId, addedRecipe};
@@ -59,18 +59,13 @@ async function insertRecipeInfo(recipeInfo) {
 //수정한 레시피 id, 레시피 정보 반환
 async function updateRecipeInfo(recipeInfo) {
     //디폴트 이미지
-    // const defaultImage = 'defaultCocktailImage';
-    // if(image == null){
-    //     image = defaultImage;
-    // }
-
-    // const updateRecipeInfoQuery = `
-    //     update recipe set rate = ?, content = ?, image =?
-    //     where cocktail = ?
-    // `;
+    const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1658031520811';
+    if(recipeInfo.image == null){
+        recipeInfo.image = defaultImage;
+    }
 
     const updateRecipeInfoQuery = `
-        update recipe set rate = ?, content = ?
+        update recipe set rate = ?, content = ?, image =?
         where cocktail = ?
     `;
 
@@ -78,7 +73,7 @@ async function updateRecipeInfo(recipeInfo) {
         select id from recipe 
         where cocktail = ?
     `
-    const [editedRecipe] = await db.query(updateRecipeInfoQuery, [recipeInfo.rate, recipeInfo.content, recipeInfo.cocktail]);
+    const [editedRecipe] = await db.query(updateRecipeInfoQuery, [recipeInfo.rate, recipeInfo.content, recipeInfo.image, recipeInfo.cocktail]);
     const id = await db.query(updatedRecipeIdQuery, [recipeInfo.cocktail]);
     const recipeId = id[0][0].id;
     return {recipeId, editedRecipe};
@@ -108,6 +103,7 @@ async function selectExistence(cocktail) {
     `;
 
     const [existence] = await db.query( selectExistenceQuery, [cocktail]);
+    console.log(existence);
     return existence;
 }
 
