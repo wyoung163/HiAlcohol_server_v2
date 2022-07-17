@@ -55,16 +55,16 @@ const BoardService = {
    */
     findPostByLike: async () => { 
       const getPostListQuery = `
-        SELECT post.*, count(liked.postId) 'likes'
+        SELECT post.*, count(liked.id) 'count'
         FROM (
           SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
           FROM post, user
           WHERE post.userId = user.id
           AND post.blind = 0
-        ) post
+        ) post 
         LEFT JOIN liked ON post.id = liked.postId
-        GROUP BY liked.postId
-        ORDER BY likes DESC
+        GROUP BY post.id
+        ORDER BY count DESC
       `;
       const [postList] = await db.query(getPostListQuery);
       return postList;
@@ -76,7 +76,7 @@ const BoardService = {
    */
   findPostList: async () => { 
     const getPostListQuery = `
-      SELECT post.*, count(liked.postId) 'likes'
+      SELECT post.*, count(liked.id) 'likes'
       FROM (
         SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
         FROM post, user
@@ -84,7 +84,7 @@ const BoardService = {
         AND post.blind = 0
       ) post
       LEFT JOIN liked ON post.id = liked.postId
-      GROUP BY liked.postId
+      GROUP BY post.id
       ORDER BY post.createdate DESC
     `;
     const [postList] = await db.query(getPostListQuery);
