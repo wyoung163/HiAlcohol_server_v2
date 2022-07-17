@@ -3,13 +3,14 @@ import express from "express";
 import bodyParser from "body-parser";
 
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
-import { homeRouter } from "./routes/homeRouter.js";
+// import { homeRouter } from "./routes/homeRouter.js";
 import { userRouter } from "./routes/userRouter.js";
 import { searchRouter } from "./routes/searchRouter.js";
 import { suggestionRouter } from "./routes/suggestionRouter.js";
 import { recipeRouter } from "./routes/recipeRouter.js";
 import { reportRouter } from "./routes/reportRouter.js";
 import { mbtiTestRouter } from "./routes/mbtiTestRouter.js";
+import { likeRouter } from "./routes/likeRouter.js";
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // 기본 페이지
-app.use(homeRouter);
+// app.use(homeRouter);
 
 // userRouter 아래에 라우터 넣어주세요!
 app.use(userRouter);
@@ -33,6 +34,7 @@ app.use(suggestionRouter);
 app.use(recipeRouter);
 app.use(reportRouter);
 app.use(mbtiTestRouter);
+app.use(likeRouter);
 
 app.use(errorMiddleware);
 
