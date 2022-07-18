@@ -149,12 +149,6 @@ const getRecipe = async (recipeId) => {
             }
         }
     }
-    // console.log(recipe_list);
-    // var rate = recipe[0].rate;
-    // var content = recipe[0].content;
-    // item.rate = rate;
-    // item.content = content;
-
     return recipeList;
 }
 
