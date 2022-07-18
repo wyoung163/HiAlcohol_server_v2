@@ -6,6 +6,14 @@ class Item {
     materials = []
 }
 
+class ItemRecipe {
+    id = ''
+    cocktail = ''
+    materials = []
+    rate = ''
+    content = ''
+}
+
 const getLists = async (keyword) => {
     const allLists = await getAllLists();
     const searchLists = await getSearchLists(keyword);
@@ -78,17 +86,18 @@ const getRecipe = async (recipeId) => {
 
     var recipeList = [];
     var index = 0;
-
     if (recipe.length === 0) {
         var checked = [];
         for (var i = 0; i < allRecipes.length; i++)
             checked[i] = 0;
         for (var i = 0; i < allRecipes.length - 1; i++) {
-            var item = new Item();
+            var item = new ItemRecipe();
             if (checked[i] === 0) {
                 item.id = allRecipes[i].id;
                 item.cocktail = allRecipes[i].cocktail;
                 item.materials[0] = allRecipes[i].material;
+                item.rate = allRecipes[i].rate;
+                item.content = allRecipes[i].content;
                 recipeList[index] = item;
                 checked[i] = 1;
             }
@@ -105,21 +114,25 @@ const getRecipe = async (recipeId) => {
             }
         }
     } else if (recipe.length === 1) {
-        var item = new Item();
+        var item = new ItemRecipe();
         item.id = recipe[0].id;
         item.cocktail = recipe[0].cocktail;
         item.materials[0] = recipe[0].material;
+        item.rate = recipe[0].rate;
+        item.content = recipe[0].content;
         recipeList[0] = item;
     } else {
         var checked = [];
         for (var i = 0; i < recipe.length; i++)
             checked[i] = 0;
         for (var i = 0; i < recipe.length - 1; i++) {
-            var item = new Item();
+            var item = new ItemRecipe();
             if (checked[i] === 0) {
                 item.id = recipe[i].id;
                 item.cocktail = recipe[i].cocktail;
                 item.materials[0] = recipe[i].material;
+                item.rate = recipe[0].rate;
+                item.content = recipe[0].content;
                 recipeList[index] = item;
                 checked[i] = 1;
             }
@@ -137,10 +150,10 @@ const getRecipe = async (recipeId) => {
         }
     }
     // console.log(recipe_list);
-    var rate = recipe[0].rate;
-    var content = recipe[0].content;
-    item.rate = rate;
-    item.content = content;
+    // var rate = recipe[0].rate;
+    // var content = recipe[0].content;
+    // item.rate = rate;
+    // item.content = content;
 
     return recipeList;
 }

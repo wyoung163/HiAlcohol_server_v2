@@ -29,7 +29,9 @@ async function getSearchLists(keyword) {
 
 async function getAllRecipes() {
     const getAllRecipesQuery = `
-        select * from recipe
+        select recipe.*, material.material from recipe, material 
+        where material.id =any(select inclusion.materialId from inclusion where inclusion.recipeId= recipe.id)
+        order by recipe.cocktail asc;
     `;
     const [allRecipes] = await db.query(getAllRecipesQuery);
     return allRecipes;
