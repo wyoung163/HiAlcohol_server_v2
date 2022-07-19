@@ -91,16 +91,9 @@ const boardController = {
   // 게시글 전체 조회
   getPostList: async (req, res, next) => {
     try { 
+      const userId = req.currentUserId;
       const option = req.query.option ?? null;
-      let data;
-      
-      switch (option) { 
-        case "like":
-          data = await BoardService.findPostByLike();
-          break;
-        default:
-          data = await BoardService.findPostList();
-      }
+      let data = await BoardService.findPostList({ userId, option });
         
       const body = {
         code: 200,
@@ -117,9 +110,10 @@ const boardController = {
   // 게시글 하나 읽기
   getPost: async (req, res, next) => {
     try {
+      const userId = req.currentUserId;
       const postId = req.params.id;
       
-      const data = await BoardService.findPost({ postId });
+      const data = await BoardService.findPost({ userId, postId });
       
       if (!data) { 
         const body = {
