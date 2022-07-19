@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { isLogined } from "../middlewares/isLogined.js";
 import { loginRequired } from "../middlewares/loginRequired.js";
 import { boardValidator } from "../middlewares/express-validator/index.js";
 import { boardController } from "../controllers/boardController.js";
@@ -27,12 +28,14 @@ boardRouter.post(
 // 게시글 전체 조회
 boardRouter.get(
   "/boards",
+  isLogined,
   boardController.getPostList
 );
 
 // 게시글 하나만 조회
 boardRouter.get(
   "/boards/:id",
+  isLogined,
   boardValidator.checkId,
   boardController.getPost
 );
