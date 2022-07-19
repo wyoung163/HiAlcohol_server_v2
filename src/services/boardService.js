@@ -16,15 +16,7 @@ const BoardService = {
       values(?, ?, ?, ?, now())
     `;
     const post = await db.query(createQuery, [userId, title, content, images]);
-    const createdPostId = post[0].insertId;
-    const getCreatedPostQuery = `
-      select p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
-      from post as p
-      join user as u on u.id = p.userId
-      where p.id = ?
-    `;
-    const createdPost = await db.query(getCreatedPostQuery, [createdPostId]);
-    return createdPost[0][0];
+    return post[0].insertId;
   },
 
   /** 게시글 이미지 추가 함수

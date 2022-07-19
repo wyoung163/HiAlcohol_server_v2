@@ -27,9 +27,14 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const data = await BoardService.create({ userId, title, content, images });
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+      const insertId = await BoardService.create({ userId, title, content, images });
+      const data = await BoardService.findPost({ postId: insertId });
+
+      // 이미지가 존재한다면
+      if (data.images !== undefined) {
+        // 문자열을 배열로 변환
+        data.images = JSON.parse(data.images);
+      }
       
       const body = {
         code: 201,
