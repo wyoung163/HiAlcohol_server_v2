@@ -28,7 +28,7 @@ const boardController = {
       }
 
       const insertId = await BoardService.create({ userId, title, content, images });
-      const data = await BoardService.findPost({ postId: insertId });
+      const data = await BoardService.findPost({ userId, postId: insertId });
 
       // 이미지가 존재한다면
       if (data.images !== undefined) {
@@ -51,12 +51,13 @@ const boardController = {
   // 게시글 이미지 첨부
   createPostImages: async (req, res, next) => {
     try {
+      const userId = req.currentUserId;
       const id = req.params.id;
       const files = req.files;
       
       // 이미지가 없다면 바로 글 작성 성공시키기
       if (files === undefined) {
-        const data = await BoardService.findPost({ postId: id });
+        const data = await BoardService.findPost({ userId, postId: id });
         
         data.images = JSON.parse(data.images);
         const body = {
@@ -113,7 +114,7 @@ const boardController = {
       const userId = req.currentUserId;
       const postId = req.params.id;
       
-      const data = await BoardService.findPost({ userId, postId });
+      let data = await BoardService.findPost({ userId, postId });
       
       if (!data) { 
         const body = {
@@ -123,6 +124,8 @@ const boardController = {
         
         return res.status(404).send({error: body});
       }
+
+      data = await BoardService.findUserLike({ userId, postId: data.postId, post: data });
 
       if (data.images !== undefined) {
         data.images = JSON.parse(data.images);
@@ -170,7 +173,7 @@ const boardController = {
         }
       });
 
-      const isPostExist = await BoardService.findPost({ postId: id });
+      const isPostExist = await BoardService.findPost({ userId, postId: id });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -190,7 +193,7 @@ const boardController = {
       }
 
       let data = await BoardService.updatePost({ id, toUpdate });
-      data = await BoardService.findPost({ postId: id });
+      data = await BoardService.findPost({ userId, postId: id });
       // 문자열을 배열로 변환
       data.images = JSON.parse(data.images);
       const body = {
@@ -223,7 +226,7 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const isPostExist = await BoardService.findPost({ postId: id });
+      const isPostExist = await BoardService.findPost({ userId, postId: id });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -277,7 +280,7 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -311,7 +314,7 @@ const boardController = {
       const postId = req.params.postId;
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -355,7 +358,7 @@ const boardController = {
       }
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -424,7 +427,7 @@ const boardController = {
       }
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,

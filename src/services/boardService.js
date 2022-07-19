@@ -112,17 +112,35 @@ const BoardService = {
     const getPostQuery = `
       SELECT post.*, count(liked.id) 'count'
       FROM (
-        SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
         FROM post, user
         WHERE post.userId = user.id
         AND post.id = ?
         AND post.blind = 0
       ) post 
-      LEFT JOIN liked ON post.id = liked.postId
-      GROUP BY post.id
+      LEFT JOIN liked ON post.postId = liked.postId
+      GROUP BY post.postId
     `;
     const post = await db.query(getPostQuery, [postId]);
     return post[0][0];
+  },
+
+  /** 회원이 좋아요 눌렀는지 확인하는 함수
+   * 
+   * @param {Number} userId - 회원 id
+   * @param {Number} postId - 글 id
+   * @param {post} post - 글 
+   * @returns 
+   */
+  findUserLike: async ({ userId, postId, post }) => {
+    const [likeCheck] = await db.query(likeCheckQuery, [userId, postId]);
+    if (likeCheck.length > 0) {
+        Object.assign(post, { "likeSelection": true });
+    } else {
+        Object.assign(post, { "likeSelection": false });
+    }
+    
+    return post;
   },
 
   /** 글 수정 함수

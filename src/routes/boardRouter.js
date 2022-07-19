@@ -21,6 +21,7 @@ boardRouter.post(
 // 게시글 이미지 첨부
 boardRouter.post(
   "/boards/:id/images",
+  isLogined,
   imageUpload.array("images"),
   boardController.createPostImages
 );

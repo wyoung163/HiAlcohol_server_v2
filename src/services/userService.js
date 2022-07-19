@@ -159,13 +159,16 @@ const UserService = {
    */
   getUserLike: async ({ id }) => { 
     const getUserBoardQuery = `
-      SELECT post.id, post.title, post.createdate, count(*) 'count', user.nickname 
-      FROM post, liked, user 
-      WHERE post.id = liked.postId
-      AND liked.userId = ? 
-      AND post.userId = user.id 
-      GROUP BY post.id
-      ORDER BY post.createdate DESC
+    SELECT post.*, count(liked.id) 'count'
+    FROM (
+      SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+      FROM post, user
+      WHERE post.userId = user.id
+      AND post.blind = 0
+    ) post 
+    LEFT JOIN liked ON post.id = liked.postId
+    AND liked.userId = ?
+    GROUP BY post.id
   `;
     const [userLikes] = await db.query(getUserBoardQuery, [id]);
     return userLikes;
