@@ -152,28 +152,6 @@ async function updateSuggestion(userId, suggestionId, updatedSuggestion) {
     return updatedsuggestion;
 }
 
-//좋아요 선택
-async function insertLike(suggestionId, userId) {
-    const insertLikeQuery = `
-        insert into suggestion_liked(suggestionId, userId)
-        values(?, ?)
-    `;
-    const [addedLike] = await db.query(insertLikeQuery, [suggestionId, userId]);
-    const addedLikeId = addedLike.insertId;
-    return addedLikeId;
-}
-
-//좋아요 취소
-async function deleteLike(suggestionId, userId) {
-    const deleteLikeQuery = `
-        delete from suggestion_liked 
-        where suggestionId =? and userId = ?
-    `;
-    const [canceledLike] = await db.query(deleteLikeQuery, [suggestionId, userId]);
-    return canceledLike;
-}
-
-
 export {
     getAllSuggestions,
     getAllSuggestionsForAdmin,
@@ -181,7 +159,5 @@ export {
     getSuggestionForAdmin,
     insertSuggestion,
     updateSuggestion,
-    insertLike,
-    deleteLike,
     selectSuggestionExistence
 };

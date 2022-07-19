@@ -9,8 +9,6 @@ import {
     showSuggestionBoardForAdmin, 
     addSuggestionBoard,
     editSuggestionBoard, 
-    addSuggestionLike, 
-    cancelSuggestionLike 
 } from "../controllers/suggestionController.js";
 import { suggestionValidator } from "../middlewares/express-validator/index.js";
 
@@ -22,7 +20,5 @@ suggestionRouter.post("/suggestion", loginRequired, suggestionValidator.checkSug
 suggestionRouter.get("/suggestion/:id", isLogined, showSuggestionBoard);
 suggestionRouter.get("/admin/suggestion/:id", loginRequired, isAdmin, showSuggestionBoardForAdmin);
 suggestionRouter.patch("/suggestion/:id", loginRequired, suggestionValidator.checkSuggestion, editSuggestionBoard);
-suggestionRouter.post("/suggestion/:id/like", loginRequired, addSuggestionLike);
-suggestionRouter.delete("/suggestion/:id/like", loginRequired, cancelSuggestionLike);
 
 export { suggestionRouter };

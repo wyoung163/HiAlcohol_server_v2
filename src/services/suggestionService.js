@@ -5,8 +5,6 @@ import {
     getSuggestionForAdmin,
     insertSuggestion,
     updateSuggestion,
-    insertLike,
-    deleteLike,
     selectSuggestionExistence
  } from "../models/Suggestion.js";
 
@@ -62,18 +60,6 @@ const updateSuggestionBoard = async (userId, suggestionId, updatedSuggestion) =>
     return updatedsuggestionBoard;
 }
 
-//좋아요 선택
-const insertSuggestionLike = async (suggestionId, userId) => {
-    const addedLikeId = await insertLike(suggestionId, userId);
-    return addedLikeId;
-}
-
-//좋아요 취소
-const deleteSuggestionLike = async (suggestionId, userId) => {
-    const canceledLike = await deleteLike(suggestionId, userId);
-    return canceledLike;
-}
-
 export { 
     getSuggestions, 
     getSuggestionsForAdmin,
@@ -82,6 +68,4 @@ export {
     getSuggestionBoardForAdmin,
     insertSuggestionBoard, 
     updateSuggestionBoard, 
-    insertSuggestionLike, 
-    deleteSuggestionLike, 
 };
