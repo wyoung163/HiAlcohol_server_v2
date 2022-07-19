@@ -1,5 +1,39 @@
 import { db } from "../../config/db.js";
 
+//로그인한 회원의 좋아요 여부 조회 Query
+const likeCheckQuery = `
+  SELECT userId 
+  FROM liked
+  WHERE userId = ? 
+  AND postId = ?
+`;
+
+const getPostListSortedByLikeQuery = `
+  SELECT post.*, count(liked.id) 'count'
+  FROM (
+    SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+    FROM post, user
+    WHERE post.userId = user.id
+    AND post.blind = 0
+  ) post 
+  LEFT JOIN liked ON post.postId = liked.postId
+  GROUP BY post.postId
+  ORDER BY count DESC
+`;
+
+const getPostListSortedByCreateDateQuery = `
+  SELECT post.*, count(liked.id) 'count'
+  FROM (
+    SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+    FROM post, user
+    WHERE post.userId = user.id
+    AND post.blind = 0
+  ) post
+  LEFT JOIN liked ON post.postId = liked.postId
+  GROUP BY post.postId
+  ORDER BY post.createdate DESC
+`;
+
 const BoardService = {
   /********** 게시글 **********/
 
@@ -41,45 +75,31 @@ const BoardService = {
     return createdPost[0][0];
   },
 
-   /** 전체 글 좋아요 내림차순 조회 함수
+   /** 전체 글 조회 함수
    * 
    * @returns postList
    */
-    findPostByLike: async () => { 
-      const getPostListQuery = `
-        SELECT post.*, count(liked.id) 'count'
-        FROM (
-          SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
-          FROM post, user
-          WHERE post.userId = user.id
-          AND post.blind = 0
-        ) post 
-        LEFT JOIN liked ON post.id = liked.postId
-        GROUP BY post.id
-        ORDER BY count DESC
-      `;
-      const [postList] = await db.query(getPostListQuery);
-      return postList;
-    },
+  findPostList: async ({ userId, option }) => { 
+    let postList;
+    switch (option) {
+      case "like": 
+        [postList] = await db.query(getPostListSortedByLikeQuery);
+        break;
+      default:
+        [postList] = await db.query(getPostListSortedByCreateDateQuery);
+    }
 
-  /** 전체 글 createdate 내림차순 조회 함수
-   * 
-   * @returns postList
-   */
-  findPostList: async () => { 
-    const getPostListQuery = `
-      SELECT post.*, count(liked.id) 'count'
-      FROM (
-        SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
-        FROM post, user
-        WHERE post.userId = user.id
-        AND post.blind = 0
-      ) post
-      LEFT JOIN liked ON post.id = liked.postId
-      GROUP BY post.id
-      ORDER BY post.createdate DESC
-    `;
-    const [postList] = await db.query(getPostListQuery);
+    if (userId !== null) {
+      for (var i = 0; i < postList.length; i++) {
+        const [likeCheck] = await db.query(likeCheckQuery, [userId, postList[i].postId]);
+        if (likeCheck.length > 0) {
+          Object.assign(postList[i], { "likeSelection": true });
+        } else {
+          Object.assign(postList[i], { "likeSelection": false });
+        }
+      }
+    }
+
     return postList;
   },
 
