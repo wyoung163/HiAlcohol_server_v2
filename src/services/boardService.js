@@ -76,7 +76,7 @@ const BoardService = {
    */
   findPostList: async () => { 
     const getPostListQuery = `
-      SELECT post.*, count(liked.id) 'likes'
+      SELECT post.*, count(liked.id) 'count'
       FROM (
         SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
         FROM post, user
