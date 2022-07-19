@@ -464,10 +464,12 @@ const boardController = {
       }
       
       await BoardService.removeComment({ id });
+      const data = await BoardService.getPostComments({ postId });
 
       const body = {
         code: 200,
         message: "댓글 삭제에 성공하였습니다.",
+        data,
       };
 
       return res.status(200).send(body);
