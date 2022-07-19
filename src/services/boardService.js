@@ -98,11 +98,16 @@ const BoardService = {
    */
   findPost: async ({ postId }) => {
     const getPostQuery = `
-      SELECT p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
-      FROM post as p
-      JOIN user as u ON u.id = p.userId
-      WHERE p.id = ?
-      AND p.blind = 0
+      SELECT post.*, count(liked.id) 'count'
+      FROM (
+        SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+        FROM post, user
+        WHERE post.userId = user.id
+        AND post.id = ?
+        AND post.blind = 0
+      ) post 
+      LEFT JOIN liked ON post.id = liked.postId
+      GROUP BY post.id
     `;
     const post = await db.query(getPostQuery, [postId]);
     return post[0][0];

@@ -124,9 +124,10 @@ const boardController = {
         
         return res.status(404).send({error: body});
       }
-      
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+
+      if (data.images !== undefined) {
+        data.images = JSON.parse(data.images);
+      }
 
       const body = {
         code: 200,
