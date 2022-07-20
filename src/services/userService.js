@@ -157,20 +157,40 @@ const UserService = {
    * @param {Number} id - 회원 id 
    * @return userLikes
    */
-  getUserLike: async ({ id }) => { 
+  getUserLike: async ({ userId }) => { 
     const getUserBoardQuery = `
     SELECT post.*, count(liked.id) 'count'
     FROM (
-      SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+      SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
       FROM post, user
       WHERE post.userId = user.id
       AND post.blind = 0
     ) post 
-    LEFT JOIN liked ON post.id = liked.postId
-    AND liked.userId = ?
-    GROUP BY post.id
+    LEFT JOIN liked ON post.postId = liked.postId
+    GROUP BY post.postId
   `;
-    const [userLikes] = await db.query(getUserBoardQuery, [id]);
+    let [userLikes] = await db.query(getUserBoardQuery, [userId]);
+
+    const likeCheckQuery = `
+      SELECT userId 
+      FROM liked
+      WHERE userId = ? 
+      AND postId = ?
+    `;
+    
+    for (var i = 0; i < userLikes.length; i++) {
+      const [likeCheck] = await db.query(likeCheckQuery, [userId, userLikes[i].postId]);
+      if (likeCheck.length > 0) {
+        Object.assign(userLikes[i], { "likeSelection": true });
+      } else {
+        delete userLikes[i];
+      }
+    }
+
+    userLikes = userLikes.filter((el) => {
+      return el != null;
+    });
+
     return userLikes;
   },
 };

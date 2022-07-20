@@ -138,9 +138,9 @@ const userController = {
   // 회원의 꿀조합 게시글 목록 조회
   findUserLike: async (req, res, next) => {
     try {
-      const id = req.currentUserId;
+      const userId = req.currentUserId;
 
-      const isUserExist = await UserService.getUserInfo({ id });
+      const isUserExist = await UserService.getUserInfo({ id: userId });
       if (isUserExist.length === 0) { 
         const body = {
           code: 404,
@@ -150,7 +150,7 @@ const userController = {
         return res.status(404).send({ error: body });
       }
 
-      const data = await UserService.getUserLike({ id });
+      const data = await UserService.getUserLike({ userId });
 
       const body = {
         code: 200,
