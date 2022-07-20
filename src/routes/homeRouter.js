@@ -16,18 +16,6 @@ const homeRouter = Router();
  *    summary: 메인 홈 화면(칵테일 조회) API
  *    description: 홈 화면에서 오늘의 술 추천 서비스를 조회할 때 사용하는 API입니다.
  *    tags: [Home]
- *    parameters:
- *    - name: 
- *      in: 
- *      description: 
- *      required: 
- *      schema:
- *        type: 
- *      examples:
- *        Sample:
- *          value: 
- *          summary: 
- *      style: 
  *    responses:
  *      200:
  *        description: 메인 홈 화면(오늘의 술 추천) 조회
@@ -48,11 +36,15 @@ const homeRouter = Router();
  *                    id:
  *                      type: number
  *                      description: 칵테일 아이디
- *                      example: 1, 2, 3, 4, 5, ...
+ *                      example: 1 
  *                    cocktail:
  *                      type: string
  *                      description: 칵테일 이름
- *                      example: 블랙 러시안, 화이트 러시안, ... 
+ *                      example: 블랙 러시안
+ *                    image:
+ *                      type: string
+ *                      description: 칵테일 이미지 url
+ *                      example: https://rabbitpull.kr.objectstorage.ncloud.com/users/1658031520811
  */
 homeRouter.get("/", showRecommendedCocktail);
 
