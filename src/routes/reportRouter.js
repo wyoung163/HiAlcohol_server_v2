@@ -47,10 +47,8 @@ const reportRouter = Router();
  *              properties:
  *                code:
  *                  type: number
- *                  example: 200
  *                message:
  *                  type: string
- *                  example: 신고된 게시글 목록 조회에 성공하였습니다.
  *                data:
  *                  type: array
  *                  items:
@@ -121,10 +119,8 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *              properties:
  *                code:
  *                  type: number
- *                  example: 200
  *                message:
  *                  type: string
- *                  example: 신고된 댓글과 게시글 목록 조회에 성공하였습니다.
  *                data:
  *                  type: array
  *                  items:
