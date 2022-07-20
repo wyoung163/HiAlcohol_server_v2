@@ -37,7 +37,7 @@ const recipeRouter = Router();
  *             items:
  *               type: string
  *               description: 칵테일 재료
- *               example: 재료1, 재료2, ....  
+ *               example: [재료1, 재료2, .... ]
  *           rate:
  *             type: string
  *             description: 칵테일 비율
@@ -51,7 +51,7 @@ const recipeRouter = Router();
  *          value: example value
  *          summary: cocktailInfo
  *      style: simple
- *    - name: cocktailImage
+ *    - name: image
  *      in: file
  *      description: 칵테일 이미지
  *      schema:
@@ -65,7 +65,7 @@ const recipeRouter = Router();
  *      examples:
  *        Sample:
  *          value: example value
- *          summary: cocktailImage
+ *          summary: image
  *      style: simple
  *    responses:
  *      200:
@@ -115,7 +115,7 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *             items:
  *               type: string
  *               description: 칵테일 재료
- *               example: 재료1.  
+ *               example: [재료1, 재료2]
  *           rate:
  *             type: string
  *             description: 칵테일 비율
@@ -129,7 +129,7 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *          value: example value
  *          summary: cocktailInfo
  *      style: simple
- *    - name: cocktailImage
+ *    - name: image
  *      in: file
  *      description: 칵테일 이미지
  *      schema:
@@ -143,7 +143,7 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *      examples:
  *        Sample:
  *          value: example value
- *          summary: cocktailImage
+ *          summary: image
  *      style: simple
  *    responses:
  *      200:
