@@ -28,7 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // 기본 페이지
 app.use(homeRouter);
 
-// userRouter 아래에 라우터 넣어주세요!
 app.use(userRouter);
 app.use('/cocktails', searchRouter);
 app.use(suggestionRouter);

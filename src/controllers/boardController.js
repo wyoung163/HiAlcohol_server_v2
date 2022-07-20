@@ -27,9 +27,14 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const data = await BoardService.create({ userId, title, content, images });
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+      const insertId = await BoardService.create({ userId, title, content, images });
+      const data = await BoardService.findPost({ userId, postId: insertId });
+
+      // 이미지가 존재한다면
+      if (data.images !== undefined) {
+        // 문자열을 배열로 변환
+        data.images = JSON.parse(data.images);
+      }
       
       const body = {
         code: 201,
@@ -46,14 +51,14 @@ const boardController = {
   // 게시글 이미지 첨부
   createPostImages: async (req, res, next) => {
     try {
-      const id = req.params.id;
+      const userId = req.currentUserId;
+      const postId = req.params.id;
       const files = req.files;
       
       // 이미지가 없다면 바로 글 작성 성공시키기
       if (files === undefined) {
-        const data = await BoardService.findPost({ postId: id });
+        const data = await BoardService.findPost({ userId, postId });
         
-        data.images = JSON.parse(data.images);
         const body = {
           code: 201,
           message: "글 작성에 성공하였습니다.",
@@ -67,7 +72,7 @@ const boardController = {
       // 배열을 저장하기 위해 문자열로 변환
       images = JSON.stringify(images);
 
-      const data = await BoardService.createImages({ id, images });
+      const data = await BoardService.createImages({ postId, images });
       // 문자열을 배열로 변환
       data.images = JSON.parse(data.images);
 
@@ -86,16 +91,9 @@ const boardController = {
   // 게시글 전체 조회
   getPostList: async (req, res, next) => {
     try { 
+      const userId = req.currentUserId;
       const option = req.query.option ?? null;
-      let data;
-      
-      switch (option) { 
-        case "like":
-          data = await BoardService.findPostByLike();
-          break;
-        default:
-          data = await BoardService.findPostList();
-      }
+      let data = await BoardService.findPostList({ userId, option });
         
       const body = {
         code: 200,
@@ -112,9 +110,10 @@ const boardController = {
   // 게시글 하나 읽기
   getPost: async (req, res, next) => {
     try {
+      const userId = req.currentUserId;
       const postId = req.params.id;
       
-      const data = await BoardService.findPost({ postId });
+      let data = await BoardService.findPost({ userId, postId });
       
       if (!data) { 
         const body = {
@@ -124,9 +123,12 @@ const boardController = {
         
         return res.status(404).send({error: body});
       }
-      
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+
+      data = await BoardService.findUserLike({ userId, postId: data.postId, post: data });
+
+      if (data.images !== undefined) {
+        data.images = JSON.parse(data.images);
+      }
 
       const body = {
         code: 200,
@@ -144,7 +146,7 @@ const boardController = {
   editPost: async (req, res, next) => { 
     try { 
       const userId = req.currentUserId;
-      const id = req.params.id;
+      const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
 
@@ -170,7 +172,7 @@ const boardController = {
         }
       });
 
-      const isPostExist = await BoardService.findPost({ postId: id });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -189,10 +191,15 @@ const boardController = {
         return res.status(403).send({error: body});
       }
 
-      let data = await BoardService.updatePost({ id, toUpdate });
-      data = await BoardService.findPost({ postId: id });
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+      let data = await BoardService.updatePost({ postId, toUpdate });
+      data = await BoardService.findPost({ userId, postId });
+
+      // 이미지가 존재한다면
+      if (data.images !== undefined) {
+        // 문자열을 배열로 변환
+        data.images = JSON.parse(data.images);
+      }
+
       const body = {
         code: 200,
         message: "글 정보 수정에 성공하였습니다.",
@@ -209,7 +216,7 @@ const boardController = {
   deletePost: async (req, res, next) => {
     try {
       const userId = req.currentUserId;
-      const id = req.params.id;
+      const postId = req.params.id;
 
       // 유저가 존재하는지 확인
       const isUserExist = await UserService.getUserInfo({ id: userId });
@@ -223,7 +230,7 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const isPostExist = await BoardService.findPost({ postId: id });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -242,7 +249,7 @@ const boardController = {
         return res.status(403).send({ error: body });
       }
 
-      await BoardService.removePost({ id });
+      await BoardService.removePost({ postId });
       
       const body = {
         code: 200,
@@ -277,7 +284,7 @@ const boardController = {
         return res.status(404).send({ error: body });
       }
 
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -308,10 +315,11 @@ const boardController = {
   // 댓글 조회
   getPostComments: async (req, res, next) => {
     try {
+      const userId = req.currentUserId;
       const postId = req.params.postId;
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -339,7 +347,7 @@ const boardController = {
     try {
       const userId = req.currentUserId;
       const postId = req.params.postId;
-      const id = req.params.id;
+      const commentId = req.params.id;
       const content = req.body.content;
 
       // 유저가 존재하는지 확인
@@ -355,7 +363,7 @@ const boardController = {
       }
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -366,7 +374,7 @@ const boardController = {
       }
 
       // 댓글이 존재하는지 확인
-      const isCommentExist = await BoardService.getComment({ id });
+      const isCommentExist = await BoardService.getComment({ commentId });
 
       // 댓글이 없다면 오류
       if (!isCommentExist) {
@@ -389,7 +397,7 @@ const boardController = {
       }
 
       // 댓글 수정
-      await BoardService.updateComment({ id, content });
+      await BoardService.updateComment({ commentId, content });
 
       // 댓글 전체 조회
       const data = await BoardService.getPostComments({ postId });
@@ -409,7 +417,7 @@ const boardController = {
     try { 
       const userId = req.currentUserId;
       const postId = req.params.postId;
-      const id = req.params.id;
+      const commentId = req.params.id;
       
       // 유저가 존재하는지 확인
       const isUserExist = await UserService.getUserInfo({ id: userId });
@@ -424,7 +432,7 @@ const boardController = {
       }
 
       // 글이 존재하는지 확인
-      const isPostExist = await BoardService.findPost({ postId });
+      const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
           code: 404,
@@ -435,7 +443,7 @@ const boardController = {
       }
 
       // 댓글이 존재하는지 확인
-      const isCommentExist = await BoardService.getComment({ id });
+      const isCommentExist = await BoardService.getComment({ commentId });
 
       // 댓글이 없다면 오류
       if (!isCommentExist) {
@@ -457,11 +465,13 @@ const boardController = {
         return res.status(403).send({ error: body });
       }
       
-      await BoardService.removeComment({ id });
+      await BoardService.removeComment({ commentId });
+      const data = await BoardService.getPostComments({ postId });
 
       const body = {
         code: 200,
         message: "댓글 삭제에 성공하였습니다.",
+        data,
       };
 
       return res.status(200).send(body);

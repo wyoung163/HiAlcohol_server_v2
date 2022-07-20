@@ -1,5 +1,39 @@
 import { db } from "../../config/db.js";
 
+//로그인한 회원의 좋아요 여부 조회 Query
+const likeCheckQuery = `
+  SELECT userId 
+  FROM liked
+  WHERE userId = ? 
+  AND postId = ?
+`;
+
+const getPostListSortedByLikeQuery = `
+  SELECT post.*, count(liked.id) 'count'
+  FROM (
+    SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+    FROM post, user
+    WHERE post.userId = user.id
+    AND post.blind = 0
+  ) post 
+  LEFT JOIN liked ON post.postId = liked.postId
+  GROUP BY post.postId
+  ORDER BY count DESC
+`;
+
+const getPostListSortedByCreateDateQuery = `
+  SELECT post.*, count(liked.id) 'count'
+  FROM (
+    SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+    FROM post, user
+    WHERE post.userId = user.id
+    AND post.blind = 0
+  ) post
+  LEFT JOIN liked ON post.postId = liked.postId
+  GROUP BY post.postId
+  ORDER BY post.createdate DESC
+`;
+
 const BoardService = {
   /********** 게시글 **********/
 
@@ -16,23 +50,16 @@ const BoardService = {
       values(?, ?, ?, ?, now())
     `;
     const post = await db.query(createQuery, [userId, title, content, images]);
-    const createdPostId = post[0].insertId;
-    const getCreatedPostQuery = `
-      select p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
-      from post as p
-      join user as u on u.id = p.userId
-      where p.id = ?
-    `;
-    const createdPost = await db.query(getCreatedPostQuery, [createdPostId]);
-    return createdPost[0][0];
+    return post[0].insertId;
   },
 
   /** 게시글 이미지 추가 함수
    * 
+   * @param {Number} id - 글 id
    * @param {Array} images - 글 이미지 
    * @returns createdPost
    */
-  createImages: async ({ id, images }) => {
+  createImages: async ({ postId, images }) => {
     const createQuery = `
       UPDATE post set images = ?
       WHERE id = ?
@@ -45,95 +72,106 @@ const BoardService = {
       JOIN user as u ON u.id = p.userId
       WHERE p.id = ?
     `;
-    const createdPost = await db.query(getPostQuery, [id]);
+    const createdPost = await db.query(getPostQuery, [postId]);
     return createdPost[0][0];
   },
 
-   /** 전체 글 좋아요 내림차순 조회 함수
+   /** 전체 글 조회 함수
    * 
+   * @param {Number} userId - 회원 id
+   * @param {String} options - like / latest
    * @returns postList
    */
-    findPostByLike: async () => { 
-      const getPostListQuery = `
-        SELECT post.*, count(liked.id) 'count'
-        FROM (
-          SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
-          FROM post, user
-          WHERE post.userId = user.id
-          AND post.blind = 0
-        ) post 
-        LEFT JOIN liked ON post.id = liked.postId
-        GROUP BY post.id
-        ORDER BY count DESC
-      `;
-      const [postList] = await db.query(getPostListQuery);
-      return postList;
-    },
+  findPostList: async ({ userId, option }) => { 
+    let postList;
+    switch (option) {
+      case "like": 
+        [postList] = await db.query(getPostListSortedByLikeQuery);
+        break;
+      default:
+        [postList] = await db.query(getPostListSortedByCreateDateQuery);
+    }
 
-  /** 전체 글 createdate 내림차순 조회 함수
-   * 
-   * @returns postList
-   */
-  findPostList: async () => { 
-    const getPostListQuery = `
-      SELECT post.*, count(liked.id) 'likes'
-      FROM (
-        SELECT post.id 'id', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
-        FROM post, user
-        WHERE post.userId = user.id
-        AND post.blind = 0
-      ) post
-      LEFT JOIN liked ON post.id = liked.postId
-      GROUP BY post.id
-      ORDER BY post.createdate DESC
-    `;
-    const [postList] = await db.query(getPostListQuery);
+    if (userId !== null) {
+      for (var i = 0; i < postList.length; i++) {
+        const [likeCheck] = await db.query(likeCheckQuery, [userId, postList[i].postId]);
+        if (likeCheck.length > 0) {
+          Object.assign(postList[i], { "likeSelection": true });
+        } else {
+          Object.assign(postList[i], { "likeSelection": false });
+        }
+      }
+    }
+
     return postList;
   },
 
   /** 글 존재 확인 함수
    * 
-   * @param {INTEGER} postId - 글 id
+   * @param {Number} postId - 글 id
    * @returns post
    */
   findPost: async ({ postId }) => {
     const getPostQuery = `
-      SELECT p.id, p.userId, u.nickname, p.title, p.content, p.images, p.createdate
-      FROM post as p
-      JOIN user as u ON u.id = p.userId
-      WHERE p.id = ?
-      AND p.blind = 0
+      SELECT post.*, count(liked.id) 'count'
+      FROM (
+        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.createdate
+        FROM post, user
+        WHERE post.userId = user.id
+        AND post.id = ?
+        AND post.blind = 0
+      ) post 
+      LEFT JOIN liked ON post.postId = liked.postId
+      GROUP BY post.postId
     `;
     const post = await db.query(getPostQuery, [postId]);
     return post[0][0];
   },
 
+  /** 회원이 좋아요 눌렀는지 확인하는 함수
+   * 
+   * @param {Number} userId - 회원 id
+   * @param {Number} postId - 글 id
+   * @param {Object} post - 글 
+   * @returns 
+   */
+  findUserLike: async ({ userId, postId, post }) => {
+    const [likeCheck] = await db.query(likeCheckQuery, [userId, postId]);
+    if (likeCheck.length > 0) {
+        Object.assign(post, { "likeSelection": true });
+    } else {
+        Object.assign(post, { "likeSelection": false });
+    }
+    
+    return post;
+  },
+
   /** 글 수정 함수
    * 
-   * @param {INTEGER} id - 글 id 
+   * @param {Number} postId - 글 id 
    * @param {Object} toUpdate - 업데이트할 글 정보
    * @returns updatedUser
    */
-  updatePost: async ({ id, toUpdate }) => {
+  updatePost: async ({ postId, toUpdate }) => {
     const updatePostQuery = `
       update post set title = ?, content = ?, updatedate = now()
       where id = ?
     `;
-    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, id]);
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, postId]);
     return updatedPost;  
   },
 
   /** 글 삭제 함수
    * 
-   * @param {id} - 글 id 
+   * @param {postId} - 글 id 
    * @returns deletedPost
    */
-  removePost: async ({ id }) => {
+  removePost: async ({ postId }) => {
     const deletePostQuery = `
       update post set updatedate = now(), blind = 2
       where id = ?
     `;
-    const deletedPost = await db.query(deletePostQuery, [id]);
+    const deletedPost = await db.query(deletePostQuery, [postId]);
     return deletedPost;
   },
 
@@ -159,14 +197,14 @@ const BoardService = {
    * 
    * @returns 
    */
-  getComment: async ({ id }) => {
+  getComment: async ({ commentId }) => {
     const getCommentQuery = `
       SELECT *
       FROM comment
       WHERE id = ?
       AND blind = 0
     `;
-    const comment = await db.query(getCommentQuery, [id]);
+    const comment = await db.query(getCommentQuery, [commentId]);
     return comment[0][0];
   },
 
@@ -177,7 +215,7 @@ const BoardService = {
    */
   getPostComments: async ({ postId }) => {
     const getCommentQuery = `
-      SELECT c.id, c.userId, u.nickname, p.id as postId, c.content, c.createdate
+      SELECT c.id commentId, c.userId, u.nickname, p.id postId, c.content, c.createdate
       FROM comment as c
       JOIN post as p ON p.id = c.postId
       JOIN user as u ON u.id = c.userId
@@ -194,26 +232,26 @@ const BoardService = {
    * @param {String} content - 수정할 댓글 내용
    * @returns updateComment
    */
-   updateComment: async ({ id, content }) => {
+   updateComment: async ({ commentId, content }) => {
     const updateCommentQuery = `
       update comment set content = ?
       where id = ?
     `;
-    const updateComment = await db.query(updateCommentQuery, [content, id]);
+    const updateComment = await db.query(updateCommentQuery, [content, commentId]);
     return updateComment;
   },
 
   /** 댓글 삭제 함수
    * 
-   * @param {Number} id - 댓글 id
+   * @param {Number} commentId - 댓글 id
    * @returns comment
    */
-  removeComment: async ({ id }) => {
+  removeComment: async ({ commentId }) => {
     const deleteCommentQuery = `
       update comment set blind = 2
       where id = ?
     `;
-    const deleteComment = await db.query(deleteCommentQuery, [id]);
+    const deleteComment = await db.query(deleteCommentQuery, [commentId]);
     return deleteComment;
   },
 };
