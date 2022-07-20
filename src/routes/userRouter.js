@@ -70,8 +70,8 @@ const userRouter = Router();
  * 
  */
 // 회원가입
-userRouter.post(
-  "/users",
+userRouter.get(
+  "/users/login",
   userController.createUser
 );
 

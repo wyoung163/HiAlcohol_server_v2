@@ -73,7 +73,7 @@ const UserService = {
 
   /** 회원 존재 확인 함수
    * 
-   * @param {INTEGER} id - 회원 id
+   * @param {Number} id - 회원 id
    * @returns user
    */
   getUserInfo: async ({ id }) => {
@@ -88,7 +88,7 @@ const UserService = {
 
   /** 회원 정보 수정 함수
    * 
-   * @param {INTEGER} id - 회원 id 
+   * @param {Number} id - 회원 id 
    * @param {Object} toUpdate - 업데이트할 유저 정보
    * @returns updatedUser
    */
@@ -113,7 +113,7 @@ const UserService = {
   /** 회원 프로필 이미지 수정 함수
    * 
    * @param {Number} id - 회원 id 
-   * @toUpdate {Object} toUpdate - 업데이트할 회원 정보 
+   * @param {Object} toUpdate - 업데이트할 회원 정보 
    * @returns updatedUser
    */
   editUserImage: async ({ id, toUpdate }) => {
@@ -134,7 +134,7 @@ const UserService = {
     return updatedUser[0];
   },
 
-  /** 회원 id로 꿀조합 게시글 조회하는 함수
+  /** 회원이 작성한 꿀조합 게시글 조회 함수
    * 
    * @param {Number} id - 회원 id
    * @returns userPosts
@@ -157,17 +157,41 @@ const UserService = {
    * @param {Number} id - 회원 id 
    * @return userLikes
    */
-  getUserLike: async ({ id }) => { 
+  getUserLike: async ({ userId }) => { 
     const getUserBoardQuery = `
-      SELECT post.id, post.title, post.createdate, count(*) 'count', user.nickname 
-      FROM post, liked, user 
-      WHERE post.id = liked.postId
-      AND liked.userId = ? 
-      AND post.userId = user.id 
-      GROUP BY post.id
-      ORDER BY post.createdate DESC
+    SELECT post.*, count(liked.id) 'count'
+    FROM (
+      SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+      FROM post, user
+      WHERE post.userId = user.id
+      AND post.blind = 0
+    ) post 
+    LEFT JOIN liked ON post.postId = liked.postId
+    GROUP BY post.postId
   `;
-    const [userLikes] = await db.query(getUserBoardQuery, [id]);
+    let [userLikes] = await db.query(getUserBoardQuery, [userId]);
+
+    const likeCheckQuery = `
+      SELECT userId 
+      FROM liked
+      WHERE userId = ? 
+      AND postId = ?
+    `;
+    
+    for (var i = 0; i < userLikes.length; i++) {
+      const [likeCheck] = await db.query(likeCheckQuery, [userId, userLikes[i].postId]);
+      if (likeCheck.length > 0) {
+        Object.assign(userLikes[i], { "likeSelection": true });
+      } else {
+        delete userLikes[i];
+      }
+    }
+
+    // 위에서 delete 되었다면 null로 남아있음 => filter로 null 제거
+    userLikes = userLikes.filter((el) => {
+      return el != null;
+    });
+
     return userLikes;
   },
 };
