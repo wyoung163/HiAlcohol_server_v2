@@ -1,5 +1,8 @@
 import winston from "winston";
 import winstonDaily from "winston-daily-rotate-file";
+import moment from "moment";
+import "moment-timezone";
+moment.tz.setDefault("Asia/Seoul"); // 로그 시간대 한국 기준으로 변경
 const { combine, timestamp, printf, colorize } = winston.format;
 
 const logDir = "logs"; // logs 디렉토리 하위에 로그 파일 저장
