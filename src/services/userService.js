@@ -3,6 +3,13 @@ import { db } from "../../config/db.js";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
+const likeCheckQuery = `
+  SELECT userId 
+  FROM liked
+  WHERE userId = ? 
+  AND postId = ?
+`;
+
 const UserService = {
   /** 회원 생성 함수
    * 
@@ -148,7 +155,17 @@ const UserService = {
       AND u.id = ?
       ORDER BY p.createdate DESC
     `;
-    const [userPosts] = await db.query(getUserBoardQuery, [id]);
+    let [userPosts] = await db.query(getUserBoardQuery, [id]);
+
+    for (var i = 0; i < userPosts.length; i++) {
+      const [likeCheck] = await db.query(likeCheckQuery, [id, userPosts[i].postId]);
+      if (likeCheck.length > 0) {
+        Object.assign(userPosts[i], { "likeSelection": true });
+      } else {
+        Object.assign(userPosts[i], { "likeSelection": false });
+      }
+    }
+
     return userPosts;
   }, 
 
@@ -170,13 +187,6 @@ const UserService = {
     GROUP BY post.postId
   `;
     let [userLikes] = await db.query(getUserBoardQuery, [userId]);
-
-    const likeCheckQuery = `
-      SELECT userId 
-      FROM liked
-      WHERE userId = ? 
-      AND postId = ?
-    `;
     
     for (var i = 0; i < userLikes.length; i++) {
       const [likeCheck] = await db.query(likeCheckQuery, [userId, userLikes[i].postId]);
