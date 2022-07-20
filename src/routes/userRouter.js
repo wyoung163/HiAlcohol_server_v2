@@ -182,11 +182,10 @@ userRouter.get(
   userController.findUserBoard
 );
 
-//! 쿼리 수정 필요 => count가 1만 뜸,,
 // 회원의 좋아요 목록 조회
 userRouter.get(
   "/users/likes",
-  // loginRequired,
+  loginRequired,
   userController.findUserLike
 );
 

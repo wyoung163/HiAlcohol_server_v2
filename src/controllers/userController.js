@@ -106,7 +106,7 @@ const userController = {
     }
   },
 
-  // 회원의 꿀조합 게시글 목록 조회
+  // 회원이 작성한 꿀조합 게시글 목록 조회
   findUserBoard: async (req, res, next) => { 
     try {
       const id = req.currentUserId;
@@ -135,7 +135,7 @@ const userController = {
     }
   },
 
-  // 회원의 꿀조합 게시글 목록 조회
+  // 회원이 누른 꿀조합 게시글 좋아요 목록 조회
   findUserLike: async (req, res, next) => {
     try {
       const userId = req.currentUserId;
