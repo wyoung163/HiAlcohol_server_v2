@@ -134,7 +134,7 @@ const UserService = {
     return updatedUser[0];
   },
 
-  /** 회원 id로 꿀조합 게시글 조회하는 함수
+  /** 회원이 작성한 꿀조합 게시글 조회 함수
    * 
    * @param {Number} id - 회원 id
    * @returns userPosts
@@ -187,6 +187,7 @@ const UserService = {
       }
     }
 
+    // 위에서 delete 되었다면 null로 남아있음 => filter로 null 제거
     userLikes = userLikes.filter((el) => {
       return el != null;
     });
