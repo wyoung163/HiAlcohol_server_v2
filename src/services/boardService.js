@@ -55,10 +55,11 @@ const BoardService = {
 
   /** 게시글 이미지 추가 함수
    * 
+   * @param {Number} id - 글 id
    * @param {Array} images - 글 이미지 
    * @returns createdPost
    */
-  createImages: async ({ id, images }) => {
+  createImages: async ({ postId, images }) => {
     const createQuery = `
       UPDATE post set images = ?
       WHERE id = ?
@@ -71,12 +72,14 @@ const BoardService = {
       JOIN user as u ON u.id = p.userId
       WHERE p.id = ?
     `;
-    const createdPost = await db.query(getPostQuery, [id]);
+    const createdPost = await db.query(getPostQuery, [postId]);
     return createdPost[0][0];
   },
 
    /** 전체 글 조회 함수
    * 
+   * @param {Number} userId - 회원 id
+   * @param {String} options - like / latest
    * @returns postList
    */
   findPostList: async ({ userId, option }) => { 
@@ -105,7 +108,7 @@ const BoardService = {
 
   /** 글 존재 확인 함수
    * 
-   * @param {INTEGER} postId - 글 id
+   * @param {Number} postId - 글 id
    * @returns post
    */
   findPost: async ({ postId }) => {
@@ -129,7 +132,7 @@ const BoardService = {
    * 
    * @param {Number} userId - 회원 id
    * @param {Number} postId - 글 id
-   * @param {post} post - 글 
+   * @param {Object} post - 글 
    * @returns 
    */
   findUserLike: async ({ userId, postId, post }) => {
@@ -145,30 +148,30 @@ const BoardService = {
 
   /** 글 수정 함수
    * 
-   * @param {INTEGER} id - 글 id 
+   * @param {Number} postId - 글 id 
    * @param {Object} toUpdate - 업데이트할 글 정보
    * @returns updatedUser
    */
-  updatePost: async ({ id, toUpdate }) => {
+  updatePost: async ({ postId, toUpdate }) => {
     const updatePostQuery = `
       update post set title = ?, content = ?, updatedate = now()
       where id = ?
     `;
-    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, id]);
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, postId]);
     return updatedPost;  
   },
 
   /** 글 삭제 함수
    * 
-   * @param {id} - 글 id 
+   * @param {postId} - 글 id 
    * @returns deletedPost
    */
-  removePost: async ({ id }) => {
+  removePost: async ({ postId }) => {
     const deletePostQuery = `
       update post set updatedate = now(), blind = 2
       where id = ?
     `;
-    const deletedPost = await db.query(deletePostQuery, [id]);
+    const deletedPost = await db.query(deletePostQuery, [postId]);
     return deletedPost;
   },
 
@@ -194,14 +197,14 @@ const BoardService = {
    * 
    * @returns 
    */
-  getComment: async ({ id }) => {
+  getComment: async ({ commentId }) => {
     const getCommentQuery = `
       SELECT *
       FROM comment
       WHERE id = ?
       AND blind = 0
     `;
-    const comment = await db.query(getCommentQuery, [id]);
+    const comment = await db.query(getCommentQuery, [commentId]);
     return comment[0][0];
   },
 
@@ -212,7 +215,7 @@ const BoardService = {
    */
   getPostComments: async ({ postId }) => {
     const getCommentQuery = `
-      SELECT c.id, c.userId, u.nickname, p.id as postId, c.content, c.createdate
+      SELECT c.id commentId, c.userId, u.nickname, p.id postId, c.content, c.createdate
       FROM comment as c
       JOIN post as p ON p.id = c.postId
       JOIN user as u ON u.id = c.userId
@@ -229,26 +232,26 @@ const BoardService = {
    * @param {String} content - 수정할 댓글 내용
    * @returns updateComment
    */
-   updateComment: async ({ id, content }) => {
+   updateComment: async ({ commentId, content }) => {
     const updateCommentQuery = `
       update comment set content = ?
       where id = ?
     `;
-    const updateComment = await db.query(updateCommentQuery, [content, id]);
+    const updateComment = await db.query(updateCommentQuery, [content, commentId]);
     return updateComment;
   },
 
   /** 댓글 삭제 함수
    * 
-   * @param {Number} id - 댓글 id
+   * @param {Number} commentId - 댓글 id
    * @returns comment
    */
-  removeComment: async ({ id }) => {
+  removeComment: async ({ commentId }) => {
     const deleteCommentQuery = `
       update comment set blind = 2
       where id = ?
     `;
-    const deleteComment = await db.query(deleteCommentQuery, [id]);
+    const deleteComment = await db.query(deleteCommentQuery, [commentId]);
     return deleteComment;
   },
 };

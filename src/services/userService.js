@@ -73,7 +73,7 @@ const UserService = {
 
   /** 회원 존재 확인 함수
    * 
-   * @param {INTEGER} id - 회원 id
+   * @param {Number} id - 회원 id
    * @returns user
    */
   getUserInfo: async ({ id }) => {
@@ -88,7 +88,7 @@ const UserService = {
 
   /** 회원 정보 수정 함수
    * 
-   * @param {INTEGER} id - 회원 id 
+   * @param {Number} id - 회원 id 
    * @param {Object} toUpdate - 업데이트할 유저 정보
    * @returns updatedUser
    */
@@ -113,7 +113,7 @@ const UserService = {
   /** 회원 프로필 이미지 수정 함수
    * 
    * @param {Number} id - 회원 id 
-   * @toUpdate {Object} toUpdate - 업데이트할 회원 정보 
+   * @param {Object} toUpdate - 업데이트할 회원 정보 
    * @returns updatedUser
    */
   editUserImage: async ({ id, toUpdate }) => {
