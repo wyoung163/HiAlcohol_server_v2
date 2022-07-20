@@ -128,7 +128,7 @@ likeRouter.delete("/board/:id/like", loginRequired, cancelBoardLike);
  *                    likeId:
  *                      type: number
  *                      description: 추가된 좋아요 아이디
- *                      example: 1, 2, 3, ...
+ *                      example: 1
  */
 likeRouter.post("/suggestion/:id/like", loginRequired, addSuggestionLike);
 

@@ -16,7 +16,7 @@ const reportRouter = Router();
  *  @swagger
  *  tags:
  *    name: Report
- *    description:Report MVP
+ *    description: Report MVP
  */
 /**
  * @swagger
@@ -83,9 +83,9 @@ const reportRouter = Router();
  *                              content: "재료는 파워에이드, 레드불, 소주만 있으면 되는데 얼음도 있으면 좋고!...",
  *                              createdate: 2022-03-15 18:05:35,
  *                              count: 5
- *                            },
+ *                           },
  *                            .....
- *                       ]    
+ *                      ]    
  *                     }     
  */
 reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport);
@@ -167,20 +167,20 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *            example: {
  *                      data: [
  *                         {
- *                             "post": {
- *                                 "id": "3",
- *                                 "nickname": "하하하",
- *                                 "title": "숙취없는 레시피",
- *                                 "content": "재료는 파워에이드, 레드불, 소주만 있으면 되는데 얼음도 있으면 좋고!...",
- *                                 "createdate": 2022-03-15 18:05:35
+ *                             post: {
+ *                                 id: 3,
+ *                                 nickname: 하하하,
+ *                                 title: 숙취없는 레시피,
+ *                                 content: 재료는 파워에이드, 레드불, 소주만 있으면 되는데 얼음도 있으면 좋고!...,
+ *                                 createdate: 2022-03-15 18:05:35
  *                              },
- *                              "comment": {
- *                                 "id": "14",
- *                                 "nickname": "나나나",
- *                                 "content": "유익해요",
- *                                 "createdate": 2022-03-16 18:05:35
+ *                              comment: {
+ *                                 id: 14,
+ *                                 nickname: 나나나,
+ *                                 content: 유익해요,
+ *                                 createdate: 2022-03-16 18:05:35
  *                              }
- *                              "count": 5
+ *                              count: 5
  *                          },
  *                          .....
  *                      ]    

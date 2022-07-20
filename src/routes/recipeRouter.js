@@ -41,7 +41,7 @@ const recipeRouter = Router();
  *           rate:
  *             type: string
  *             description: 칵테일 비율
- *             example: 보드카 3: 아마레또1
+ *             example: 보드카 3 아마레또1
  *           content:
  *             type: string
  *             description: 칵테일 제조방법
@@ -119,7 +119,7 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *           rate:
  *             type: string
  *             description: 칵테일 비율
- *             example: 보드카 3: 아마레또1
+ *             example: 보드카 3 아마레또1
  *           content:
  *             type: string
  *             description: 칵테일 제조방법
