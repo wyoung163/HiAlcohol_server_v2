@@ -57,9 +57,8 @@ const boardController = {
       
       // 이미지가 없다면 바로 글 작성 성공시키기
       if (files === undefined) {
-        const data = await BoardService.findPost({ userId, postId: id });
+        const data = await BoardService.findPost({ userId, postId });
         
-        data.images = JSON.parse(data.images);
         const body = {
           code: 201,
           message: "글 작성에 성공하였습니다.",
@@ -194,8 +193,13 @@ const boardController = {
 
       let data = await BoardService.updatePost({ postId, toUpdate });
       data = await BoardService.findPost({ userId, postId });
-      // 문자열을 배열로 변환
-      data.images = JSON.parse(data.images);
+
+      // 이미지가 존재한다면
+      if (data.images !== undefined) {
+        // 문자열을 배열로 변환
+        data.images = JSON.parse(data.images);
+      }
+
       const body = {
         code: 200,
         message: "글 정보 수정에 성공하였습니다.",

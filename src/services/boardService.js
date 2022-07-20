@@ -115,7 +115,7 @@ const BoardService = {
     const getPostQuery = `
       SELECT post.*, count(liked.id) 'count'
       FROM (
-        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.createdate
         FROM post, user
         WHERE post.userId = user.id
         AND post.id = ?
