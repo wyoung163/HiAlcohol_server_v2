@@ -78,9 +78,9 @@ const reportRouter = Router();
  *                      data: [
  *                           {
  *                              id: 1,
- *                              nickname: "이하늘",
- *                              title: "내일 숙취가 없는 꿀조합",
- *                              content: "재료는 파워에이드, 레드불, 소주만 있으면 되는데 얼음도 있으면 좋고!...",
+ *                              nickname: 이하늘,
+ *                              title: 내일 숙취가 없는 꿀조합,
+ *                              content: 재료는 파워에이드, 레드불, 소주만 있으면 되는데 얼음도 있으면 좋고!...,
  *                              createdate: 2022-03-15 18:05:35,
  *                              count: 5
  *                           },
@@ -179,7 +179,7 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                                 nickname: 나나나,
  *                                 content: 유익해요,
  *                                 createdate: 2022-03-16 18:05:35
- *                              }
+ *                              },
  *                              count: 5
  *                          },
  *                          .....
