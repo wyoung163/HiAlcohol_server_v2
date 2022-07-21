@@ -37,7 +37,7 @@ const recipeRouter = Router();
  *             items:
  *               type: string
  *               description: 칵테일 재료
- *               example: 재료1, 재료2, ....
+ *               example: 재료1, 재료2
  *           rate:
  *             type: string
  *             description: 칵테일 비율
