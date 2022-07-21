@@ -171,7 +171,7 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                                 id: 3,
  *                                 nickname: 하하하,
  *                                 title: 숙취없는 레시피,
- *                                 content: 재료는 파워에이드 레드불 소주만 있으면 되는데 얼음도 있으면 좋고!,
+ *                                 content: "재료는 파워에이드 레드불 소주만 있으면 되는데 얼음도 있으면 좋고!",
  *                                 createdate: 2022-03-15 18:05:35
  *                              },
  *                              comment: {
