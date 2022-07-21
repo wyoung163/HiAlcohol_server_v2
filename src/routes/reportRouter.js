@@ -73,8 +73,8 @@ const reportRouter = Router();
  *                        type: number
  *                        description: 신고 횟수
  *            example: {
- *                      code: 200
- *                      message: 신고된 게시글 목록 조회에 성공하였습니다.
+ *                      code: 200,
+ *                      message: 신고된 게시글 목록 조회에 성공하였습니다,
  *                      data: [
  *                           {
  *                              id: 1,
@@ -163,8 +163,8 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                        type: number
  *                        description: 신고 횟수
  *            example: {
- *                      code: 200
- *                      message: 신고된 댓글 목록 조회에 성공하였습니다. *                      
+ *                      code: 200,
+ *                      message: 신고된 댓글 목록 조회에 성공하였습니다,                      
  *                      data: [
  *                         {
  *                             post: {
