@@ -74,6 +74,7 @@ const userController = {
     }
   },
 
+  // 회원 프로필 사진 수정
   updateUserImage: async (req, res, next) => { 
     try { 
       const id = req.currentUserId;
