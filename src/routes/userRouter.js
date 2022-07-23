@@ -256,7 +256,7 @@ userRouter.put(
 /** 회원 프로필 이미지 수정
  * @swagger
  * /users/image:
- *   put:
+ *   post:
  *    summary: 유저 프로필 이미지 수정 API
  *    description: 유저의 프로필 이미지 수정할 때 사용하는 API 입니다.
  *    tags: [User]
