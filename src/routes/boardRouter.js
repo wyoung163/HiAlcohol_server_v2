@@ -631,9 +631,9 @@ boardRouter.get(
 /** 댓글 수정
  * @swagger
  * /boards/{postId}/comments/{id}:
- *   get:
- *    summary: 게시글의 댓글 수정 API
- *    description: 게시글의 댓글 수정할 때 사용하는 API 입니다.
+ *   put:
+ *    summary: 댓글 수정 API
+ *    description: 댓글을 수정할 때 사용하는 API 입니다.
  *    tags: [Comment]
  *    parameters:
  *       - in: path
@@ -717,7 +717,7 @@ boardRouter.put(
 /** 댓글 삭제
  * @swagger
  * /boards/{postId}/comments/{id}:
- *   get:
+ *   delete:
  *    summary: 게시글의 댓글 삭제 API
  *    description: 게시글의 댓글을 삭제할 때 사용하는 API 입니다.
  *    tags: [Comment]
