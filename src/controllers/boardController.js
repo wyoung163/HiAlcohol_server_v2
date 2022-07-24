@@ -202,7 +202,7 @@ const boardController = {
 
       const body = {
         code: 200,
-        message: "글 정보 수정에 성공하였습니다.",
+        message: "글 수정에 성공하였습니다.",
         data,
       };
 
