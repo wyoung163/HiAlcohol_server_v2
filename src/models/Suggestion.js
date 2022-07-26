@@ -132,7 +132,7 @@ async function updateSuggestion(userId, suggestionId, updatedSuggestion) {
         where id = ?    
     `;
     const isUser = await db.query(checkUserQuery, [suggestionId]);
-    if (isUser.userId != userId) {
+    if (isUser[0][0].userId != userId) {
         return;
     }
 
