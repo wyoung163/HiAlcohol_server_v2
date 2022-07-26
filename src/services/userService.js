@@ -148,12 +148,16 @@ const UserService = {
    */
   getUserBoard: async ({ id }) => { 
     const getUserBoardQuery = `
-      SELECT p.id postId, u.id userId, u.nickname, p.title, p.createdate
-      FROM post as p
-      JOIN user as u
-      ON p.userId = u.id
-      AND u.id = ?
-      ORDER BY p.createdate DESC
+      SELECT post.*, count(liked.id) 'count'
+      FROM (
+        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.createdate
+        FROM post, user
+        WHERE post.userId = user.id
+        AND post.blind = 0
+        AND user.id = ?
+      ) post 
+      LEFT JOIN liked ON post.postId = liked.postId
+      GROUP BY post.postId
     `;
     let [userPosts] = await db.query(getUserBoardQuery, [id]);
 
@@ -178,7 +182,7 @@ const UserService = {
     const getUserBoardQuery = `
     SELECT post.*, count(liked.id) 'count'
     FROM (
-      SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.createdate
+      SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.createdate
       FROM post, user
       WHERE post.userId = user.id
       AND post.blind = 0
