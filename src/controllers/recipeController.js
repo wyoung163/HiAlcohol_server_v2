@@ -1,4 +1,4 @@
-import { selectMaterials, insertMaterials, insertRecipe, updateRecipe, insertInclusions, checkExistence } from "../services/recipeService.js";
+import { selectMaterials, insertMaterials, insertRecipe, updateRecipe, insertInclusions, checkExistence, checkCocktail } from "../services/recipeService.js";
 import { response, errResponse } from "../../config/response.js";
 
 const addRecipes = async (req, res) => {
@@ -12,12 +12,12 @@ const addRecipes = async (req, res) => {
         let addedMaterialIds;
         let materialIds;
 
-        //이미 존재하는 레시피인지 확인
-        const duplication = await checkExistence(cocktail);
-        if(duplication.length != 0){
-            return res.send(response({"code":400, "message": '이미 레시피가 존재합니다.'}));
+        //동일한 이름의 칵테일이 존재하는지 확인
+        const existedCocktail = await checkCocktail(cocktail);
+        if(existedCocktail.length > 0){
+            return res.send(response({"code":400, "message": '동일한 칵테일명의 다른 레시피가 존재합니다.'}));
         }
-
+    
         //이미 존재하는 재료인지 확인 -> 존재하는 재료일 경우 id, 그렇지 않을 경우 재료명 반환
         const checkingMaterials = await selectMaterials(materials);
 
@@ -49,17 +49,18 @@ const addRecipes = async (req, res) => {
 
 const editRecipes = async (req, res) => {
     try {
+        const id = req.body.id;
         const cocktail = req.body.cocktail;
         const materials = req.body.materials;
         const rate = req.body.rate;
         const content = req.body.content;
         const image = req.file?.location ?? null;
-        const recipeInfo = {cocktail, rate, content, image};
+        const recipeInfo = {cocktail, rate, content, image, id};
         let addedMaterialIds;
         let materialIds;
 
         //존재하는 레시피인지 확인
-        const existence = await checkExistence(cocktail);
+        const existence = await checkExistence(id);
         if(!existence){
             return res.send(response({"code":400, "message": '존재하지 않는 레시피입니다.'}));
         }
@@ -81,12 +82,15 @@ const editRecipes = async (req, res) => {
 
         //레시피 수정
         const editedRecipe = await updateRecipe(recipeInfo);
+
+        if(editedRecipe == undefined){
+            return res.send(response({"code":400, "message": '동일한 칵테일명의 다른 레시피가 존재합니다.'}))
+        }
         
         //레시피에 사용되는 재료 정보 inclusion 테이블에 추가
-        const recipeId = editedRecipe.recipeId;
-        const addedInclusions = await insertInclusions(recipeId, materialIds);
+        const addedInclusions = await insertInclusions(id, materialIds);
 
-        return res.send(response({"code":200, "message": '레시피 수정에 성공하였습니다.'}, {recipeId: recipeId}));
+        return res.send(response({"code":200, "message": '레시피 수정에 성공하였습니다.'}, {recipeId: id}));
     } catch(err) {
         console.log(err);
         return res.send(errResponse({"code": 400, "message": '레시피 수정에 실패하였습니다.'}));

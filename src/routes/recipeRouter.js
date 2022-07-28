@@ -23,7 +23,7 @@ const recipeRouter = Router();
  *    parameters:
  *    - name: cocktailInfo
  *      in: body
- *      description: 칵테일 정보
+ *      description: body에 칵테일 정보를 입력하세요.
  *      schema:
  *        type: object
  *        required: true
@@ -93,15 +93,26 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
 
 /**
  * @swagger
- * /admin/recipe:
+ * /admin/recipe/:id:
  *   patch:
  *    summary: 레시피 수정 API
  *    description: 술 레시피 수정에 대한 API입니다.
  *    tags: [Recipe]
  *    parameters:
+ *    - name: id
+ *      in: body
+ *      description: body에 레시피 id를 입력하세요
+ *      required: true
+ *      schema:
+ *        type: int
+ *      examples:
+ *        Sample:
+ *          value: 2
+ *          summary: id
+ *      style: simple
  *    - name: cocktailInfo
  *      in: body
- *      description: 칵테일 정보
+ *      description: body에 칵테일 정보를 입력하세요
  *      schema:
  *        type: object
  *        required: true

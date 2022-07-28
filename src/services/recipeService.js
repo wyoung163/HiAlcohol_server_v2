@@ -1,4 +1,4 @@
-import { insertRecipeInfo, updateRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo, selectExistence } from "../models/Recipe.js";
+import { insertRecipeInfo, updateRecipeInfo, insertMaterialInfo, selectMaterialInfo, insertInclusionInfo, selectExistence, selectCocktail } from "../models/Recipe.js";
 
 //재료 존재 여부 확인
 const selectMaterials = async (materials) => {
@@ -31,9 +31,14 @@ const insertInclusions = async (recipeId, materialIds) => {
 }
 
 //레시피 존재 여부 확인
-const checkExistence = async (cocktail) => {
-    const existence = await selectExistence(cocktail);
+const checkExistence = async (id) => {
+    const existence = await selectExistence(id);
     return existence;
 }
 
-export { selectMaterials, insertMaterials, insertRecipe, updateRecipe, insertInclusions, checkExistence };
+//레시피 존재 여부 확인
+const checkCocktail = async (cocktail) => {
+    const existence = await selectCocktail(cocktail);
+    return existence;
+}
+export { selectMaterials, insertMaterials, insertRecipe, updateRecipe, insertInclusions, checkExistence, checkCocktail };
