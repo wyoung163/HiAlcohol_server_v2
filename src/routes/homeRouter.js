@@ -44,7 +44,7 @@ const homeRouter = Router();
  *                    image:
  *                      type: string
  *                      description: 칵테일 이미지 url
- *                      example: https://rabbitpull.kr.objectstorage.ncloud.com/users/1658031520811
+ *                      example: https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208
  */
 homeRouter.get("/", showRecommendedCocktail);
 
