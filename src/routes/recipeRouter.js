@@ -99,17 +99,6 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *    description: 술 레시피 수정에 대한 API입니다.
  *    tags: [Recipe]
  *    parameters:
- *    - name: id
- *      in: body
- *      description: body에 레시피 id를 입력하세요
- *      required: true
- *      schema:
- *        type: int
- *      examples:
- *        Sample:
- *          value: 2
- *          summary: id
- *      style: simple
  *    - name: cocktailInfo
  *      in: body
  *      description: body에 칵테일 정보를 입력하세요
@@ -117,6 +106,10 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *        type: object
  *        required: true
  *        properties:
+ *           id:
+ *             type: int
+ *             description: 칵테일 아이디
+ *             example: 50
  *           cocktail:
  *             type: string
  *             description: 칵테일 이름
