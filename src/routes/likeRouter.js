@@ -23,10 +23,10 @@ const likeRouter = Router();
  *      description: 파라미터에 꿀조합 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: 
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 3
  *          summary: id
  *      style: simple
  *    responses:
@@ -66,10 +66,10 @@ likeRouter.post("/board/:id/like", loginRequired, addBoardLike);
  *      description: 파라미터에 꿀조합 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: 
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 3
  *          summary: id
  *      style: simple
  *    responses:
@@ -102,10 +102,10 @@ likeRouter.delete("/board/:id/like", loginRequired, cancelBoardLike);
  *      description: 파라미터에 건의 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: 
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 3
  *          summary: id
  *      style: simple
  *    responses:
@@ -145,10 +145,10 @@ likeRouter.post("/suggestion/:id/like", loginRequired, addSuggestionLike);
  *      description: 파라미터에 건의 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: 
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 3
  *          summary: id
  *      style: simple
  *    responses:

@@ -22,10 +22,10 @@ const searchRouter = Router();
  *      description: 쿼리에 keyword를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 보드카
  *          summary: keyword
  *      style: simple
  *    responses:
@@ -77,10 +77,10 @@ searchRouter.get("/search", showSearchLists);
  *      description: 파라미터에 레시피 id를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 2
  *          summary: id
  *      style: simple
  *    responses:

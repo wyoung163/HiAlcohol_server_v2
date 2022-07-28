@@ -25,18 +25,6 @@ const reportRouter = Router();
  *    summary: 관리자의 신고된 게시글 목록 조회 API
  *    description: 관리자가 신고된 게시글 목록을 조회할 수 있는 API입니다.
  *    tags: [Report]
- *    parameters:
- *    - name: 
- *      in: 
- *      description: 
- *      required: 
- *      schema:
- *        type: 
- *      examples:
- *        Sample:
- *          value: 
- *          summary: 
- *      style: 
  *    responses:
  *      200:
  *        description: 신고된 게시글 목록 
@@ -96,19 +84,7 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *   get:
  *    summary: 관리자의 신고된 댓글 및 해당 게시글 목록 조회 API
  *    description: 관리자가 신고된 댓글 목록을 그 댓글이 작성된 게시글과 함께 조회할 수 있는 API입니다.
- *    tags: [Report]
- *    parameters:
- *    - name: 
- *      in: 
- *      description: 
- *      required: 
- *      schema:
- *        type: 
- *      examples:
- *        Sample:
- *          value: 
- *          summary: 
- *      style: 
+ *    tags: [Report] 
  *    responses:
  *      200:
  *        description: 신고된 댓글 및 해당 게시글 목록 
@@ -201,10 +177,10 @@ reportRouter.get("/admin/reports/comment", loginRequired, isAdmin, showCommentRe
  *      description: 파라미터에 신고된 댓글의 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
- *          value: example value 
+ *          value: 16
  *          summary: boardId
  *      style: simple
  *    - name: commentId
@@ -212,10 +188,10 @@ reportRouter.get("/admin/reports/comment", loginRequired, isAdmin, showCommentRe
  *      description: 파라미터에 신고된 댓글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
- *          value: example value 
+ *          value: 5
  *          summary: commenId
  *      style: simple
  *    responses:
@@ -271,10 +247,10 @@ reportRouter.post("/reports/board/:boardId/comment/:commentId", loginRequired, a
  *      description: 파라미터에 신고된 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
- *          value: example value 
+ *          value: 13
  *          summary: id
  *      style: simple
  *    responses:
@@ -326,10 +302,10 @@ reportRouter.post("/reports/board/:id", loginRequired, addBoardReport);
  *      description: 파라미터에 숨기거나 숨김을 철회할 댓글의 게시글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
- *          value: example value 
+ *          value: 16 
  *          summary: boardId
  *      style: simple
  *    - name: commentId
@@ -337,10 +313,10 @@ reportRouter.post("/reports/board/:id", loginRequired, addBoardReport);
  *      description: 파라미터에 숨기거나 숨김을 철회할 댓글 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
- *          value: example value 
+ *          value: 2
  *          summary: commenId
  *      style: simple
  *    responses:
@@ -380,11 +356,11 @@ reportRouter.patch("/admin/reports/board/:boardId/comment/:commentId", loginRequ
  *      description: 파라미터에 숨기거나 숨김을 철회할 게시글의 아이디를 입력하세요.
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples: 
  *        Sample: 
  *          value: example value 
- *          summary: id
+ *          summary: 1
  *      style: simple
  *    responses:
  *      200:
