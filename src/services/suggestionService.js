@@ -5,7 +5,8 @@ import {
     getSuggestionForAdmin,
     insertSuggestion,
     updateSuggestion,
-    selectSuggestionExistence
+    selectSuggestionExistence,
+    deleteSuggestion
  } from "../models/Suggestion.js";
 
 //전체 건의 게시글 조회
@@ -60,6 +61,13 @@ const updateSuggestionBoard = async (userId, suggestionId, updatedSuggestion) =>
     return updatedsuggestionBoard;
 }
 
+
+//건의 게시글 삭제
+const deleteSuggestionBoard = async (userId, suggestionId) => {
+    const deletedsuggestionBoard = await deleteSuggestion(userId, suggestionId);   
+    return deletedsuggestionBoard;
+}
+
 export { 
     getSuggestions, 
     getSuggestionsForAdmin,
@@ -68,4 +76,5 @@ export {
     getSuggestionBoardForAdmin,
     insertSuggestionBoard, 
     updateSuggestionBoard, 
+    deleteSuggestionBoard,
 };

@@ -6,6 +6,7 @@ import {
     getSuggestionBoardForAdmin,
     insertSuggestionBoard, 
     updateSuggestionBoard, 
+    deleteSuggestionBoard
  } from "../services/suggestionService.js";
 import { response, errResponse } from "../../config/response.js";
 
@@ -96,6 +97,11 @@ const editSuggestionBoard = async (req, res) => {
         const suggestionId = req.params.id;
         const updatedSuggestion = req.body;
 
+        const Existence = await checkSuggestionExistence(suggestionId);
+        if(Existence[0].length <= 0) {
+            return res.send(response({ "code": 200, "message": '존재하지 않는 게시글입니다.' }));
+        }
+
         const updatedSuggestionBoard = await updateSuggestionBoard(userId, suggestionId, updatedSuggestion);
         console.log(updatedSuggestionBoard);
 
@@ -110,6 +116,30 @@ const editSuggestionBoard = async (req, res) => {
     }
 }
 
+//건의 게시글 삭제
+const removeSuggestionBoard = async (req, res) => {
+    try {
+        const userId = req.currentUserId;
+        const suggestionId = req.params.id;
+
+        const Existence = await checkSuggestionExistence(suggestionId);
+        if(Existence[0].length <= 0) {
+            return res.send(response({ "code": 200, "message": '존재하지 않는 게시글입니다.' }));
+        }
+
+        const deletedSuggestionBoard = await deleteSuggestionBoard(userId, suggestionId);
+
+        if (deletedSuggestionBoard == undefined) {
+            return res.send(response({ "code": 400, "message": '게시글의 작성자만 수정할 수 있습니다.' }));
+        } else {
+            return res.send(response({ "code": 200, "message": '건의 게시글 삭제에 성공하였습니다.' }));
+        }
+    } catch (err) {
+        console.log(err);
+        return res.send(errResponse({ "code": 400, "message": '건의 게시글 삭제에 실패하였습니다.' }));
+    }
+}
+
 export { 
     showSuggestions,
     showSuggestionsForAdmin, 
@@ -117,4 +147,5 @@ export {
     showSuggestionBoardForAdmin, 
     addSuggestionBoard,
     editSuggestionBoard, 
+    removeSuggestionBoard
 };
