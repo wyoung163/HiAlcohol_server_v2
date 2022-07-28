@@ -445,10 +445,10 @@ suggestionRouter.patch("/suggestion/:id", loginRequired, suggestionValidator.che
  *      description: 파리미터에 삭제할 건의 게시글 id를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 1
  *          summary: id
  *      style: simple
  *    responses:
