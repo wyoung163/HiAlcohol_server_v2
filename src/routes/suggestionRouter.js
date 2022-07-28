@@ -34,10 +34,10 @@ const suggestionRouter = Router();
  *      description: 쿼리에 option을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: like or latest
  *          summary: option
  *      style: simple
  *    responses:
@@ -99,10 +99,10 @@ suggestionRouter.get("/suggestions", isLogined, showSuggestions);
  *      description: 쿼리에 option을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: like or latest
  *          summary: option
  *      style: simple
  *    responses:
@@ -160,10 +160,10 @@ suggestionRouter.get("/admin/suggestions", loginRequired, isAdmin, showSuggestio
  *      description: 바디에 title을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 000 칵테일 레시피 추가해주세요!
  *          summary: title
  *      style: simple
  *    - name: content
@@ -171,10 +171,10 @@ suggestionRouter.get("/admin/suggestions", loginRequired, isAdmin, showSuggestio
  *      description: 바디에 content을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 000 칵테일이 새로 나왔는데 ...
  *          summary: content
  *      style: simple
  *    responses:
@@ -230,10 +230,10 @@ suggestionRouter.post("/suggestion", loginRequired, suggestionValidator.checkSug
  *      description: 파라미터에 건의 게시글 id를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 1
  *          summary: id
  *      style: simple
  *    responses:
@@ -297,10 +297,10 @@ suggestionRouter.get("/suggestion/:id", isLogined, showSuggestionBoard);
  *      description: 파라미터에 건의 게시글 id를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 1
  *          summary: id
  *      style: simple
  *    responses:
@@ -360,10 +360,10 @@ suggestionRouter.get("/admin/suggestion/:id", loginRequired, isAdmin, showSugges
  *      description: 파리미터에 수정할 건의 게시글 id를 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: int
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 1
  *          summary: id
  *      style: simple
  *    - name: title
@@ -371,21 +371,21 @@ suggestionRouter.get("/admin/suggestion/:id", loginRequired, isAdmin, showSugges
  *      description: 바디에 title을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
  *          value: example value
- *          summary: title
+ *          summary: 000을 건의합니다.
  *      style: simple
  *    - name: content
  *      in: body
  *      description: 바디에 content을 입력하세요
  *      required: true
  *      schema:
- *        type: stringify
+ *        type: string
  *      examples:
  *        Sample:
- *          value: example value
+ *          value: 000 칵테일 레시피 추가해주세요.
  *          summary: content
  *      style: simple
  *    responses:
