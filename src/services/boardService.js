@@ -64,7 +64,7 @@ const BoardService = {
       UPDATE post set images = ?
       WHERE id = ?
     `;
-    await db.query(createQuery, [images, id]);
+    await db.query(createQuery, [images, postId]);
 
     const getPostQuery = `
       SELECT p.id, u.nickname, p.title, p.content, p.images, p.createdate
