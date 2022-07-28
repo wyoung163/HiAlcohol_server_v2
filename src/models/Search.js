@@ -2,7 +2,7 @@ import { db } from "../../config/db.js";
 
 async function getAllLists() {
     const getAllListsQuery = `
-        select recipe.id, recipe.cocktail, material.material from recipe, material 
+        select recipe.*, material.material from recipe, material 
         where material.id =any(select inclusion.materialId from inclusion where inclusion.recipeId= recipe.id)
         order by recipe.cocktail asc
     `;
@@ -12,7 +12,7 @@ async function getAllLists() {
 
 async function getSearchLists(keyword) {
     const getSearchListsQuery = `
-        select recipe.cocktail, recipe.id, material.material from recipe, material  
+        select recipe.*, material.material from recipe, material  
         where ((recipe.cocktail= ?) and (material.id = 
         any(select inclusion.materialId from inclusion where inclusion.recipeId = 
         (select recipe.id from recipe where recipe.cocktail = ?)))) or

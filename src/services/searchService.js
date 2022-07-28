@@ -1,17 +1,12 @@
 import { getSearchLists, getAllLists, getAllRecipes, getSearchRecipe } from "../models/Search.js";
 
-class Item {
-    id = ''
-    cocktail = ''
-    materials = []
-}
-
 class ItemRecipe {
     id = ''
     cocktail = ''
     materials = []
     rate = ''
     content = ''
+    image = ''
 }
 
 const getLists = async (keyword) => {
@@ -25,11 +20,14 @@ const getLists = async (keyword) => {
         for (var i = 0; i < allLists.length; i++)
             checked[i] = 0;
         for (var i = 0; i < allLists.length - 1; i++) {
-            var item = new Item();
+            var item = new ItemRecipe();
             if (checked[i] === 0) {
                 item.id = allLists[i].id;
                 item.cocktail = allLists[i].cocktail;
                 item.materials[0] = allLists[i].material;
+                item.rate = allLists[i].rate;
+                item.content = allLists[i].content;
+                item.image = allLists[i].image;
                 recipeList[index] = item;
                 checked[i] = 1;
             }
@@ -46,21 +44,29 @@ const getLists = async (keyword) => {
             }
         }
     } else if (searchLists.length === 1) {
-        var item = new Item();
+        var item = new ItemRecipe();
         item.id = searchLists[0].id;
         item.cocktail = searchLists[0].cocktail;
         item.materials[0] = searchLists[0].material;
+        item.rate = searchLists[i].rate;
+        item.content = searchLists[i].content;
+        item.image = searchLists[i].image;
+        recipeList[index] = item;
         recipeList[0] = item;
     } else {
         var checked = [];
         for (var i = 0; i < searchLists.length; i++)
             checked[i] = 0;
         for (var i = 0; i < searchLists.length - 1; i++) {
-            var item = new Item();
+            var item = new ItemRecipe();
             if (checked[i] === 0) {
                 item.id = searchLists[i].id;
                 item.cocktail = searchLists[i].cocktail;
                 item.materials[0] = searchLists[i].material;
+                item.rate = searchLists[i].rate;
+                item.content = searchLists[i].content;
+                item.image = searchLists[i].image;
+                recipeList[index] = item;
                 recipeList[index] = item;
                 checked[i] = 1;
             }
@@ -98,6 +104,7 @@ const getRecipe = async (recipeId) => {
                 item.materials[0] = allRecipes[i].material;
                 item.rate = allRecipes[i].rate;
                 item.content = allRecipes[i].content;
+                item.image = allRecipes[i].image;
                 recipeList[index] = item;
                 checked[i] = 1;
             }
@@ -120,6 +127,7 @@ const getRecipe = async (recipeId) => {
         item.materials[0] = recipe[0].material;
         item.rate = recipe[0].rate;
         item.content = recipe[0].content;
+        item.image = recipe[i].image;
         recipeList[0] = item;
     } else {
         var checked = [];
@@ -133,6 +141,7 @@ const getRecipe = async (recipeId) => {
                 item.materials[0] = recipe[i].material;
                 item.rate = recipe[0].rate;
                 item.content = recipe[0].content;
+                item.image = recipe[0].image;
                 recipeList[index] = item;
                 checked[i] = 1;
             }

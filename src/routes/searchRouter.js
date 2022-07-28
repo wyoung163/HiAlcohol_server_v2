@@ -60,7 +60,19 @@ const searchRouter = Router();
  *                        items:
  *                          type: string
  *                          description: 칵테일 재료
- *                          example: 재료1, 재료2    
+ *                          example: 재료1, 재료2 
+ *                      rate:
+ *                        type: string
+ *                        description: 칵테일 재료 비율
+ *                        example: 보드카 3 아마레또1
+ *                      content:
+ *                        type: string
+ *                        description: 칵테일 제조 방법
+ *                        example: 보드카, 파인애플주스, 코코코넛밀크를 넣고 흔든 후 잘게 부순 얼음으로 채운 잔에 따른다
+ *                      image:
+ *                        type: string
+ *                        description: 칵테일 이미지
+ *                        example: https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208   
  */
 searchRouter.get("/search", showSearchLists);
 
@@ -122,6 +134,10 @@ searchRouter.get("/search", showSearchLists);
  *                      type: string
  *                      description: 칵테일 제조 방법
  *                      example: 보드카, 파인애플주스, 코코코넛밀크를 넣고 흔든 후 잘게 부순 얼음으로 채운 잔에 따른다
+ *                    image:
+ *                      type: string
+ *                      description: 칵테일 이미지
+ *                      example: https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208
  */
 searchRouter.get("/recipe/:id", showRecipe);
 
