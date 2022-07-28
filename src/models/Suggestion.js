@@ -152,6 +152,27 @@ async function updateSuggestion(userId, suggestionId, updatedSuggestion) {
     return updatedsuggestion;
 }
 
+//건의 게시글 삭제
+async function deleteSuggestion(userId, suggestionId) {
+    const checkUserQuery = `
+        select userId from suggestion
+        where id = ?    
+    `;
+    const isUser = await db.query(checkUserQuery, [suggestionId]);
+    if (isUser[0][0].userId != userId) {
+        return;
+    }
+
+    const deleteSuggestionQuery = `
+        delete from suggestion
+        where id = ?    
+    `;
+    await db.query(deleteSuggestionQuery, [suggestionId]);
+
+    const deletedsuggestion = suggestionId;
+    return deletedsuggestion;
+}
+
 export {
     getAllSuggestions,
     getAllSuggestionsForAdmin,
@@ -159,5 +180,6 @@ export {
     getSuggestionForAdmin,
     insertSuggestion,
     updateSuggestion,
-    selectSuggestionExistence
+    selectSuggestionExistence,
+    deleteSuggestion
 };

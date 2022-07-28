@@ -9,6 +9,7 @@ import {
     showSuggestionBoardForAdmin, 
     addSuggestionBoard,
     editSuggestionBoard, 
+    removeSuggestionBoard
 } from "../controllers/suggestionController.js";
 import { suggestionValidator } from "../middlewares/express-validator/index.js";
 
@@ -430,5 +431,41 @@ suggestionRouter.get("/admin/suggestion/:id", loginRequired, isAdmin, showSugges
  *                      example: 2022-04-15 18:05:35
  */
 suggestionRouter.patch("/suggestion/:id", loginRequired, suggestionValidator.checkSuggestion, editSuggestionBoard);
+
+/**
+ * @swagger
+ * /suggestion/:id:
+ *   delete:
+ *    summary: 건의 게시글 삭제 API
+ *    description: 건의 게시글을 삭제할 수 있는 API 입니다.
+ *    tags: [Suggestion]
+ *    parameters:
+ *    - name: id
+ *      in: params
+ *      description: 파리미터에 삭제할 건의 게시글 id를 입력하세요
+ *      required: true
+ *      schema:
+ *        type: stringify
+ *      examples:
+ *        Sample:
+ *          value: example value
+ *          summary: id
+ *      style: simple
+ *    responses:
+ *      200:
+ *        description: 건의 게시글 삭제
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                code:
+ *                  type: number
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: 건의 게시글 삭제에 성공하였습니다.
+ */
+ suggestionRouter.delete("/suggestion/:id", loginRequired, removeSuggestionBoard);
 
 export { suggestionRouter };
