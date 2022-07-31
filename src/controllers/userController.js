@@ -6,7 +6,7 @@ const userController = {
     try {
       const code = req.query.code;
       const data = await UserService.upsertKakaoUser({ code });
-  
+      console.log("router data ===", data);
       const body = {
         code: 201,
         message: "유저 생성에 성공하였습니다.",

@@ -74,7 +74,7 @@ const UserService = {
     const token = jwt.sign({ id: userData.id }, secretKey);
 
     const loginUser = {
-      id,
+      id: userData.id,
       kakaoid,
       profile_url: userData.profile_url,
       nickname: userData.nickname,
