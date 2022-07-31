@@ -18,8 +18,8 @@ const UserService = {
    */
   upsertKakaoUser: async ({ code }) => {
     const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
-    const KAKAO_REDIRECT_URL = "http://localhost:5000/users";
-    
+    const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL_IN_SERVICE;
+
     //카카오 토큰 받기
     const ret = await axios.post(
       `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URL}&code=${code}`,
