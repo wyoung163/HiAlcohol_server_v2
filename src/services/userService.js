@@ -61,7 +61,7 @@ const UserService = {
         from user
         where id = ?
       `;
-      userData = await db.query(isUserExistQueryById, [createdUserId]);
+      [userData] = await db.query(isUserExistQueryById, [createdUserId]);
       console.log("65 id", userData);
       console.log("66 id", userData.id);
     }
