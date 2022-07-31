@@ -58,12 +58,12 @@ const UserService = {
       console.log("58 createdUser[0]", createdUser[0]);
       const createdUserId = createdUser[0].insertId;
       
-      const isUserExistQuery = `
+      const isUserExistQueryById = `
         select *
         from user
         where id = ?
       `;
-      userData = await db.query(isUserExistQuery, [createdUserId]);
+      userData = await db.query(isUserExistQueryById, [createdUserId]);
       console.log("68 id", userData.id);
     }
     console.log("70 id", userData.id);
