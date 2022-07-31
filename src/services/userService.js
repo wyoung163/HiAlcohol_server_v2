@@ -55,6 +55,7 @@ const UserService = {
         values(?, ?, ?)
       `;
       const createdUser = await db.query(createUserQuery, [userData.kakaoid, userData.profile_url, userData.nickname]);
+      console.log("58 createdUser[0]", createdUser[0]);
       const createdUserId = createdUser[0].insertId;
       
       const isUserExistQuery = `
