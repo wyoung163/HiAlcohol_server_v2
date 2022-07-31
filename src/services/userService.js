@@ -48,7 +48,7 @@ const UserService = {
 
     console.log("isUserExist", isUserExist);
 
-    if (isUserExist.length === 0) {
+    if (isUserExist[0].length === 0) {
       // 최초 로그인, 디비에 새로 생성
       const createUserQuery = `
         insert into user(kakaoid, profile_url, nickname)
