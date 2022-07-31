@@ -5,9 +5,9 @@ const userController = {
   createUser: async (req, res, next) => {
     try {
       const code = req.query.code;
-      const token = await UserService.upsertKakaoUser({ code });
+      const data = await UserService.upsertKakaoUser({ code });
       
-      const redirect_uri = `${process.env.KAKAO_REDIRECT_URL_IN_ROUTER}?token=${token}`
+      const redirect_uri = `${process.env.KAKAO_REDIRECT_URL_IN_ROUTER}?token=${data.token}`
 
       res.status(201).redirect(redirect_uri);
     } catch (err) {
