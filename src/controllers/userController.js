@@ -5,11 +5,15 @@ const userController = {
   createUser: async (req, res, next) => {
     try {
       const code = req.query.code;
-      const user = await UserService.upsertKakaoUser({ code });
+      const data = await UserService.upsertKakaoUser({ code });
   
-      const redirect_uri = `http://localhost:3000/login/kakao?token=${user.token}`;
+      const body = {
+        code: 201,
+        message: "유저 생성에 성공하였습니다.",
+        data,
+      };
   
-      res.status(200).redirect(redirect_uri);
+      res.status(201).send(body);
     } catch (err) {
       next(err);
     }
