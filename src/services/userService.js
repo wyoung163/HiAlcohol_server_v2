@@ -66,15 +66,7 @@ const UserService = {
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
     const token = jwt.sign({ id: userData[0].id }, secretKey);
 
-    const loginUser = {
-      id: userData[0].id,
-      kakaoid: userData[0].kakaoid,
-      profile_url: userData[0].profile_url,
-      nickname: userData[0].nickname,
-      token,
-    };
-
-    return loginUser;
+    return token;
   },
 
   /** 회원 존재 확인 함수
