@@ -62,19 +62,17 @@ const UserService = {
         where id = ?
       `;
       [userData] = await db.query(isUserExistQueryById, [createdUserId]);
-      console.log("65 id", userData);
-      console.log("66 id", userData.id);
     }
-    console.log("68 id", userData.id);
+    console.log("68 id", userData[0].id);
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
-    const token = jwt.sign({ id: userData.id }, secretKey);
+    const token = jwt.sign({ id: userData[0].id }, secretKey);
 
     const loginUser = {
-      id: userData.id,
-      kakaoid: userData.kakaoid,
-      profile_url: userData.profile_url,
-      nickname: userData.nickname,
+      id: userData[0].id,
+      kakaoid: userData[0].kakaoid,
+      profile_url: userData[0].profile_url,
+      nickname: userData[0].nickname,
       token,
     };
 
