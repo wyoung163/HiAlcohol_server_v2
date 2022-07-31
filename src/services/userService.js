@@ -46,7 +46,7 @@ const UserService = {
     `;
     let isUserExist = await db.query(isUserExistQuery, [userData.kakaoid]);
 
-    console.log("isUserExist", isUserExist);
+    console.log("isUserExist", isUserExist[0].length);
 
     if (isUserExist[0].length === 0) {
       // 최초 로그인, 디비에 새로 생성
