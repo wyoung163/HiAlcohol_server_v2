@@ -75,7 +75,7 @@ const UserService = {
 
     const loginUser = {
       id: userData.id,
-      kakaoid,
+      kakaoid: userData.kakaoid,
       profile_url: userData.profile_url,
       nickname: userData.nickname,
       token,
