@@ -53,7 +53,6 @@ const UserService = {
         values(?, ?, ?)
       `;
       const createdUser = await db.query(createUserQuery, [userData.kakaoid, userData.profile_url, userData.nickname]);
-      console.log("58 createdUser[0]", createdUser[0]);
       const createdUserId = createdUser[0].insertId;
       
       const isUserExistQueryById = `
@@ -63,7 +62,6 @@ const UserService = {
       `;
       [userData] = await db.query(isUserExistQueryById, [createdUserId]);
     }
-    console.log("68 id", userData[0].id);
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
     const token = jwt.sign({ id: userData[0].id }, secretKey);
