@@ -38,6 +38,8 @@ const UserService = {
       nickname: kakaoData.data.kakao_account.profile.nickname,
     };
 
+    console.log("41 userData ==", userData);
+
     // 유저가 존재하는지 확인
     const isUserExistQuery = `
       select *
