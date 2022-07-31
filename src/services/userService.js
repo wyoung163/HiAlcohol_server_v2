@@ -67,6 +67,8 @@ const UserService = {
       userData = await db.query(isUserExistQuery, [createdUserId]);
     }
 
+    console.log("70 userData ==", userData);
+
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
     const token = jwt.sign({ id: userData.id }, secretKey);
