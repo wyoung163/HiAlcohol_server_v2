@@ -38,8 +38,6 @@ const UserService = {
       nickname: kakaoData.data.kakao_account.profile.nickname,
     };
 
-    console.log("41 userData ==", userData);
-
     // 유저가 존재하는지 확인
     const isUserExistQuery = `
       select *
@@ -48,7 +46,9 @@ const UserService = {
     `;
     let isUserExist = await db.query(isUserExistQuery, [userData.kakaoid]);
 
-    console.log("49 isUserExist ==", isUserExist);
+    console.log("userData.kakoid", userData.kakaoid);
+    console.log("userData.profile_url", userData.profile_url);
+    console.log("userData.nickname", userData.nickname);
 
     if (isUserExist.length === 0) {
       // 최초 로그인, 디비에 새로 생성
@@ -66,8 +66,6 @@ const UserService = {
       `;
       userData = await db.query(isUserExistQuery, [createdUserId]);
     }
-
-    console.log("70 userData ==", userData);
 
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
