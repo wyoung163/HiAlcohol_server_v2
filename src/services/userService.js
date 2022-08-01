@@ -88,7 +88,7 @@ const UserService = {
       from user
       where id = ?
     `;
-    const isUserExist = await db.query(isUserExistQuery, [id]);
+    const [isUserExist] = await db.query(isUserExistQuery, [id]);
     console.log("isUserExist: ", isUserExist);
     return isUserExist[0];
   },
