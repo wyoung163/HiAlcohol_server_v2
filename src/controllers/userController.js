@@ -8,7 +8,7 @@ const userController = {
       const data = await UserService.upsertKakaoUser({ code });
       
       const redirect_uri = `${process.env.KAKAO_REDIRECT_URL_IN_ROUTER}?token=${data.token}`
-
+      console.log("token ==> ", data.token);
       res.status(201).redirect(redirect_uri);
     } catch (err) {
       next(err);
