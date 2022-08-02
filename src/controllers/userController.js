@@ -21,7 +21,7 @@ const userController = {
       const id = req.currentUserId;
       const data = await UserService.getUserInfo({ id });
 
-      if ( data === undefined || data.length === 0) { 
+      if (data === undefined || data.length === 0) { 
         const body = {
           code: 404,
           message: "존재하지 않는 유저입니다.",

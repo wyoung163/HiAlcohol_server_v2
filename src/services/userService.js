@@ -64,6 +64,7 @@ const UserService = {
     }
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
+    console.log("userData[0].id ===", userData[0].id);
     const token = jwt.sign({ id: userData[0].id }, secretKey);
 
     const loginUser = {
