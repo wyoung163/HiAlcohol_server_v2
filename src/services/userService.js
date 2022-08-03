@@ -66,14 +66,14 @@ const UserService = {
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
     console.log("userData", userData);
-    console.log("userData[0].id ===", userData[0].id);
-    const token = jwt.sign({ id: userData[0].id }, secretKey);
+    console.log("userData[0].id ===", userData.id);
+    const token = jwt.sign({ id: userData.id }, secretKey);
 
     const loginUser = {
-      id: userData[0].id,
-      kakaoid: userData[0].kakaoid,
-      profile_url: userData[0].profile_url,
-      nickname: userData[0].nickname,
+      id: userData.id,
+      kakaoid: userData.kakaoid,
+      profile_url: userData.profile_url,
+      nickname: userData.nickname,
       token,
     };
 
