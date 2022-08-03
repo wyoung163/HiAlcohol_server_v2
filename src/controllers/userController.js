@@ -8,7 +8,7 @@ const userController = {
       const data = await UserService.upsertKakaoUser({ code });
       
       const redirect_uri = `${process.env.KAKAO_REDIRECT_URL_IN_ROUTER}?token=${data.token}`
-
+      console.log("token ==> ", data.token);
       res.status(201).redirect(redirect_uri);
     } catch (err) {
       next(err);
@@ -21,7 +21,7 @@ const userController = {
       const id = req.currentUserId;
       const data = await UserService.getUserInfo({ id });
 
-      if (data.length === 0) { 
+      if (data === undefined || data.length === 0) { 
         const body = {
           code: 404,
           message: "존재하지 않는 유저입니다.",

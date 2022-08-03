@@ -64,7 +64,9 @@ const UserService = {
     }
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
-    const token = jwt.sign({ id: userData[0].id }, secretKey);
+    console.log("userData", userData);
+    console.log("userData[0].id ===", userData[0][0].id);
+    const token = jwt.sign({ id: userData[0][0].id }, secretKey);
 
     const loginUser = {
       id: userData[0].id,
@@ -88,7 +90,8 @@ const UserService = {
       from user
       where id = ?
     `;
-    const isUserExist = await db.query(isUserExistQuery, [id]);
+    const [isUserExist] = await db.query(isUserExistQuery, [id]);
+    console.log("isUserExist: ", isUserExist);
     return isUserExist[0];
   },
 
