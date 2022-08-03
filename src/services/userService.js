@@ -44,9 +44,10 @@ const UserService = {
       from user
       where kakaoid = ?
     `;
-    [userData] = await db.query(isUserExistQuery, [userData.kakaoid]);
-    console.log("48 userData ==", userData);
-    if (userData.length === 0) {
+    [isUserExist] = await db.query(isUserExistQuery, [userData.kakaoid]);
+    console.log("48 userData ==", isUserExist);
+    
+    if (isUserExist.length === 0) {
       // 최초 로그인, 디비에 새로 생성
       const createUserQuery = `
         insert into user(kakaoid, profile_url, nickname)
