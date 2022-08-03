@@ -45,7 +45,9 @@ const userController = {
   // 회원 정보 수정
   updateUserNickname: async (req, res, next) => { 
     try { 
-      const id = req.currentUserId;
+      // const id = req.currentUserId;
+      console.log("req ===", req);
+      const id = 28;
       const nickname = req.body.nickname;
       const toUpdate = {
         nickname,

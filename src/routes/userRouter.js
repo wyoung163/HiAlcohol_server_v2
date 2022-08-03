@@ -249,7 +249,7 @@ userRouter.get(
  */
 userRouter.put(
   "/users",
-  loginRequired,
+  // loginRequired,
   userController.updateUserNickname
 );
 
