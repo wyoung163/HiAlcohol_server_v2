@@ -62,6 +62,8 @@ const UserService = {
         where id = ?
       `;
       [userData] = await db.query(isUserExistQueryById, [createdUserId]);
+      userData = userData[0]
+      console.log("66 ==", userData);
     }
     else { 
       userData = isUserExist[0]
