@@ -44,7 +44,7 @@ const UserService = {
       from user
       where kakaoid = ?
     `;
-    [isUserExist] = await db.query(isUserExistQuery, [userData.kakaoid]);
+    let [isUserExist] = await db.query(isUserExistQuery, [userData.kakaoid]);
     console.log("48 userData ==", isUserExist);
     
     if (isUserExist.length === 0) {
