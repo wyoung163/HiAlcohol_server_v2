@@ -53,7 +53,7 @@ const UserService = {
         insert into user(kakaoid, profile_url, nickname)
         values(?, ?, ?)
       `;
-      const createdUser = await db.query(createUserQuery, [userData[0].kakaoid, userData[0].profile_url, userData[0].nickname]);
+      const createdUser = await db.query(createUserQuery, [userData.kakaoid, userData.profile_url, userData.nickname]);
       const createdUserId = createdUser[0].insertId;
       
       const isUserExistQueryById = `
