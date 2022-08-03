@@ -63,6 +63,9 @@ const UserService = {
       `;
       [userData] = await db.query(isUserExistQueryById, [createdUserId]);
     }
+    else { 
+      userData = isUserExist[0]
+    }
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
     console.log("userData", userData);
@@ -115,7 +118,7 @@ const UserService = {
       from user
       where id = ?
     `;
-
+    
     const updatedUser = await db.query(getUpdatedUserQuery, [id]);
     return updatedUser[0];
   },
