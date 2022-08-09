@@ -59,7 +59,7 @@ async function getAllSuggestions(userId, option) {
 }
 
 //<관리자> 전체 건의 게시글 조회
-async function getAllSuggestionsForAdmin() {
+async function getAllSuggestionsForAdmin(option) {
     let allSuggestions = '';
     if(option == 'latest') {
         [allSuggestions] = await db.query(getAllSuggestionsQuery1);
