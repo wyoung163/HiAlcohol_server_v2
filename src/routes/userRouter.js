@@ -16,8 +16,8 @@ const userRouter = Router();
  */
 /** 회원가입 & 로그인
  * @swagger
- * /users:
- *   post:
+ * /users/login:
+ *   get:
  *    summary: 유저 생성 API
  *    description: 유저를 생성할 때 사용하는 API 입니다.
  *    tags: [User]
@@ -249,7 +249,7 @@ userRouter.get(
  */
 userRouter.put(
   "/users",
-  loginRequired,
+  // loginRequired,
   userController.updateUserNickname
 );
 

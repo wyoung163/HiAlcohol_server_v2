@@ -5,11 +5,11 @@ const userController = {
   createUser: async (req, res, next) => {
     try {
       const code = req.query.code;
-      const user = await UserService.upsertKakaoUser({ code });
-  
-      const redirect_uri = `http://localhost:3000/login/kakao?token=${user.token}`;
-  
-      res.status(200).redirect(redirect_uri);
+      const data = await UserService.upsertKakaoUser({ code });
+      
+      const redirect_uri = `${process.env.KAKAO_REDIRECT_URL_IN_ROUTER}?token=${data.token}`
+      console.log("token ==> ", data.token);
+      res.status(201).redirect(redirect_uri);
     } catch (err) {
       next(err);
     }
@@ -21,7 +21,7 @@ const userController = {
       const id = req.currentUserId;
       const data = await UserService.getUserInfo({ id });
 
-      if (data.length === 0) { 
+      if (data === undefined || data.length === 0) { 
         const body = {
           code: 404,
           message: "존재하지 않는 유저입니다.",
@@ -45,7 +45,9 @@ const userController = {
   // 회원 정보 수정
   updateUserNickname: async (req, res, next) => { 
     try { 
-      const id = req.currentUserId;
+      // const id = req.currentUserId;
+      console.log("req ===", req);
+      const id = 28;
       const nickname = req.body.nickname;
       const toUpdate = {
         nickname,

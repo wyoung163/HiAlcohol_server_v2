@@ -18,8 +18,8 @@ const UserService = {
    */
   upsertKakaoUser: async ({ code }) => {
     const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
-    const KAKAO_REDIRECT_URL = "http://localhost:5000/users";
-    
+    const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL_IN_SERVICE;
+
     //카카오 토큰 받기
     const ret = await axios.post(
       `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URL}&code=${code}`,
@@ -44,9 +44,10 @@ const UserService = {
       from user
       where kakaoid = ?
     `;
-    const isUserExist = await db.query(isUserExistQuery, [userData.kakaoid]);
-
-    if (!isUserExist) {
+    let [isUserExist] = await db.query(isUserExistQuery, [userData.kakaoid]);
+    console.log("48 userData ==", isUserExist);
+    
+    if (isUserExist.length === 0) {
       // 최초 로그인, 디비에 새로 생성
       const createUserQuery = `
         insert into user(kakaoid, profile_url, nickname)
@@ -55,21 +56,27 @@ const UserService = {
       const createdUser = await db.query(createUserQuery, [userData.kakaoid, userData.profile_url, userData.nickname]);
       const createdUserId = createdUser[0].insertId;
       
-      const isUserExistQuery = `
+      const isUserExistQueryById = `
         select *
         from user
         where id = ?
       `;
-      userData = await db.query(isUserExistQuery, [createdUserId]);
+      [userData] = await db.query(isUserExistQueryById, [createdUserId]);
+      userData = userData[0]
+      console.log("66 ==", userData);
     }
-
+    else { 
+      userData = isUserExist[0]
+    }
     // 로그인 성공 -> JWT 웹 토큰 생성
     const secretKey = process.env.JWT_SECRET_KEY || "jwt-secret-key";
-    const token = jwt.sign({ id: user.id }, secretKey);
+    console.log("userData", userData);
+    console.log("userData[0].id ===", userData.id);
+    const token = jwt.sign({ id: userData.id }, secretKey);
 
     const loginUser = {
-      id,
-      kakaoid,
+      id: userData.id,
+      kakaoid: userData.kakaoid,
       profile_url: userData.profile_url,
       nickname: userData.nickname,
       token,
@@ -89,7 +96,8 @@ const UserService = {
       from user
       where id = ?
     `;
-    const isUserExist = await db.query(isUserExistQuery, [id]);
+    const [isUserExist] = await db.query(isUserExistQuery, [id]);
+    console.log("isUserExist: ", isUserExist);
     return isUserExist[0];
   },
 
@@ -112,7 +120,7 @@ const UserService = {
       from user
       where id = ?
     `;
-
+    
     const updatedUser = await db.query(getUpdatedUserQuery, [id]);
     return updatedUser[0];
   },
