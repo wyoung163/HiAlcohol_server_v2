@@ -43,23 +43,22 @@ async function getAllSuggestions(userId, option) {
         [allSuggestions] = await db.query(getAllSuggestionsQuery2);
     } 
 
-    if (userId != null) {
+    if (userId !== null) {
         for (var i = 0; i < allSuggestions.length; i++) {
             const [likeCheck] = await db.query(likeCheckQuery, [userId, allSuggestions[i].suggestionId]);
-            console.log(likeCheck.length);
             if (likeCheck.length > 0) {
                 Object.assign(allSuggestions[i], { "likeSelection": true });
             } else {
                 Object.assign(allSuggestions[i], { "likeSelection": false });
             }
         }
-    }
+    } 
 
     return allSuggestions;
 }
 
 //<관리자> 전체 건의 게시글 조회
-async function getAllSuggestionsForAdmin() {
+async function getAllSuggestionsForAdmin(option) {
     let allSuggestions = '';
     if(option == 'latest') {
         [allSuggestions] = await db.query(getAllSuggestionsQuery1);
@@ -86,7 +85,7 @@ async function getSuggestion(userId, suggestionId) {
     const [likeCount] = await db.query(likeCountQuery, [suggestionId]);
     Object.assign(suggestion[0], likeCount[0]);
 
-    if (userId != null) {
+    if (userId !== null) {
         const [likeCheck] = await db.query(likeCheckQuery, [userId, suggestionId]);
         if (likeCheck.length > 0) {
             Object.assign(suggestion[0], { "likeSelection": true });
