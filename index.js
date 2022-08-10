@@ -14,7 +14,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: "http://localhost:5000",
+      url: `http://${process.env.PUBLIC_IP}:5000`,
       description: "Development server",
     },
   ],
@@ -23,7 +23,7 @@ const swaggerDefinition = {
 const options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
-  apis: ["./src/routers/*.js"],
+  apis: ["./src/routes/*.js"],
 };
 const swaggerSpec = swaggerJSDoc(options);
 
