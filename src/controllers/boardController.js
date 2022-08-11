@@ -11,7 +11,11 @@ const boardController = {
       const title = req.body.title;
       const content = req.body.content;
       const files = req.files;
-      let images = files.map((v) => v.location);
+      let images = [];
+      // 이미지가 없다면 바로 글 작성 성공시키기
+      if (files !== undefined) { 
+        images = files.map((v) => v.location);
+      }
       // 배열을 저장하기 위해 문자열로 변환
       // 이미지가 없다면 null로
       images = images.length === 0 ? null : JSON.stringify(images);
