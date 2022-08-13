@@ -249,7 +249,8 @@ userRouter.get(
  */
 userRouter.put(
   "/users",
-  // loginRequired,
+  loginRequired,
+  imageUpload.single("profile_url"),
   userController.updateUserNickname
 );
 

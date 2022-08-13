@@ -45,15 +45,23 @@ const userController = {
   // 회원 정보 수정
   updateUserNickname: async (req, res, next) => { 
     try { 
-      // const id = req.currentUserId;
-      console.log("req ===", req);
-      const id = 28;
-      const nickname = req.body.nickname;
+      const id = req.currentUserId;
+      const nickname = req.body.nickname ?? null;
+      const profile_url = req.file?.location ?? null;
+
       const toUpdate = {
         nickname,
       };
-
-      const data = await UserService.editUserNickname({ id, toUpdate });
+      let data;
+      if (!nickname) {
+        data = await UserService.editUserImage({ id, profile_url });
+      }
+      else if (!profile_url) {
+        data = await UserService.editUserNickname({ id, toUpdate });
+      } else { 
+        data = await UserService.editUserImage({ id, profile_url });
+        data = await UserService.editUserNickname({ id, toUpdate });
+      }
 
       if (data.length === 0) { 
         const body = {

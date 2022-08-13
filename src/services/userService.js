@@ -131,13 +131,13 @@ const UserService = {
    * @param {Object} toUpdate - 업데이트할 회원 정보 
    * @returns updatedUser
    */
-  editUserImage: async ({ id, toUpdate }) => {
+  editUserImage: async ({ id, profile_url }) => {
     const updateUserQuery = `
       update user set profile_url = ?
       where id = ?
     `;
 
-    await db.query(updateUserQuery, [toUpdate.profile_url, id]);
+    await db.query(updateUserQuery, [profile_url, id]);
 
     const getUpdatedUserQuery = `
       select *
