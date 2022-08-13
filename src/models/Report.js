@@ -45,7 +45,7 @@ async function selectBoardReports() {
 
     //각 신고된 게시글의 정보 받아오기
     const boardsInfoQuery =`
-        select p.id, u.nickname, p.title, p.content, p.createdate
+        select p.id, u.nickname, p.title, p.content, p.createdate, p.blind
         from post as p
         join user as u on p.userId = u.id
         where p.id = ?;
@@ -82,13 +82,13 @@ async function selectCommentReports() {
 
     //신고된 댓글 정보와 해당 게시글 정보 받아오기
     const commentBoardInfoQuery =`
-        select p.id, u.nickname, p.title, p.content, p.createdate
+        select p.id, u.nickname, p.title, p.content, p.createdate, p.blind
         from post as p
         join user as u on p.userId = u.id
         where p.id = ?;
     `;
     const commentsInfoQuery =`
-        select c.id, u.nickname, c.content, c.createdate
+        select c.id, u.nickname, c.content, c.createdate, c.blind
         from comment as c
         join user as u on c.userId = u.id
         where c.id = ? and c.postId = ?;
@@ -138,7 +138,9 @@ async function insertReportedBoard(postId, userId) {
     const [suggestion] = await db.query(insertReportedBoardQuery, [postId, userId]);
     const [count] = await db.query(countBoardQuery, [postId]);
 
-    if(count[0].count >= 1){
+    console.log(count[0].count);
+
+    if(count[0].count >= 10){
         await db.query(updateBlindBoardQuery, [1, postId]);
         isBlind = true;
         return Object.assign(count[0], {"reportId" : suggestion.insertId, "postId" : postId, "isBlind": isBlind});
