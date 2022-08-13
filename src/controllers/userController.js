@@ -46,15 +46,22 @@ const userController = {
   updateUserNickname: async (req, res, next) => { 
     try { 
       const id = req.currentUserId;
-      const nickname = req.body.nickname;
+      const nickname = req.body.nickname ?? null;
       const profile_url = req.file?.location ?? null;
 
       const toUpdate = {
         nickname,
       };
-
-      let data = await UserService.editUserNickname({ id, toUpdate });
-      data = await UserService.editUserImage({ id, profile_url });
+      let data;
+      if (!nickname) {
+        data = await UserService.editUserImage({ id, profile_url });
+      }
+      else if (!profile_url) {
+        data = await UserService.editUserNickname({ id, toUpdate });
+      } else { 
+        data = await UserService.editUserImage({ id, profile_url });
+        data = await UserService.editUserNickname({ id, toUpdate });
+      }
 
       if (data.length === 0) { 
         const body = {
