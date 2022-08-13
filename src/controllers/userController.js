@@ -48,6 +48,7 @@ const userController = {
       const id = req.currentUserId;
       const nickname = req.body.nickname ?? null;
       const profile_url = req.file?.location ?? null;
+      console.log("req ===>", req);
 
       const toUpdate = {
         nickname,
