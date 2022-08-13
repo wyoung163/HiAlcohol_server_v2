@@ -48,8 +48,6 @@ const userController = {
       const id = req.currentUserId;
       const nickname = req.body.nickname ?? null;
       const profile_url = req.file?.location ?? null;
-      console.log("req ===>", req);
-
       const toUpdate = {
         nickname,
       };
@@ -91,11 +89,7 @@ const userController = {
       const id = req.currentUserId;
       const profile_url = req.file?.location ?? null;
       
-      const toUpdate = {
-        profile_url,
-      };
-
-      const data = await UserService.editUserImage({ id, toUpdate });
+      const data = await UserService.editUserImage({ id, profile_url });
 
       if (data.length === 0) { 
         const body = {
