@@ -57,6 +57,9 @@ const reportRouter = Router();
  *                      createdate:
  *                        type: string
  *                        description: 작성일자
+ *                      blind:
+ *                        type: number
+ *                        description: 0(false), 1(true)
  *                      count:
  *                        type: number
  *                        description: 신고 횟수
@@ -70,6 +73,7 @@ const reportRouter = Router();
  *                              title: 내일 숙취가 없는 꿀조합,
  *                              content: 재료는 파워에이드 레드불 소주만 있으면 되는데 얼음도 있으면 좋고!,
  *                              createdate: 2022-03-15 18:05:35,
+ *                              blind: 1,
  *                              count: 5
  *                           },
  *                            .....
@@ -120,6 +124,9 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                          createdate:
  *                            type: string
  *                            description: 작성일자
+ *                          blind:
+ *                            type: number
+ *                            description: 0(false), 1(true)
  *                      comment: 
  *                        type: object
  *                        properties:
@@ -135,6 +142,9 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                          createdate:
  *                            type: string
  *                            description: 작성일자
+ *                          blind:
+ *                            type: number
+ *                            description: 0(false), 1(true)
  *                      count:
  *                        type: number
  *                        description: 신고 횟수
@@ -148,13 +158,15 @@ reportRouter.get("/admin/reports/board", loginRequired, isAdmin, showBoardReport
  *                                 nickname: 하하하,
  *                                 title: 숙취없는 레시피,
  *                                 content: "재료는 파워에이드 레드불 소주만 있으면 되는데 얼음도 있으면 좋고!",
- *                                 createdate: 2022-03-15 18:05:35
+ *                                 createdate: 2022-03-15 18:05:35,
+ *                                 blind: 1
  *                              },
  *                              comment: {
  *                                 id: 14,
  *                                 nickname: 나나나,
  *                                 content: 유익해요,
- *                                 createdate: 2022-03-16 18:05:35
+ *                                 createdate: 2022-03-16 18:05:35,
+ *                                 blind: 1
  *                              },
  *                              count: 5
  *                          },
