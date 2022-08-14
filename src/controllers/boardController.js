@@ -154,6 +154,7 @@ const boardController = {
       const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
+      console.log("req ==", req);
 
       // 유저가 존재하는지 확인
       const isUserExist = await UserService.getUserInfo({ id: userId });
