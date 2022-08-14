@@ -1,5 +1,25 @@
 import { db } from "../../config/db.js";
 
+//꿀조합 게시글 좋아요 유저 확인
+async function selectBUser(postId, userId) {
+    const selectUserQuery = `
+        select * from liked 
+        where postId =? and userId = ?;
+    `;
+    const [checkUser] = await db.query(selectUserQuery, [postId, userId]);
+    return checkUser;
+}
+
+//건의 게시글 좋아요 유저 확인
+async function selectRUser(suggestionId, userId) {
+    const selectUserQuery = `
+        select * from suggestion_liked 
+        where suggestionId =? and userId = ?;
+    `;
+    const [checkUser] = await db.query(selectUserQuery, [suggestionId, userId]);
+    return checkUser;
+}
+
 //꿀조합 게시판 좋아요 선택
 async function insertBLike(postId, userId) {
     const insertLikeQuery = `
@@ -46,5 +66,7 @@ export {
     insertBLike, 
     deleteBLike,
     insertSLike, 
-    deleteSLike
+    deleteSLike,
+    selectBUser,
+    selectRUser
 };
