@@ -1,7 +1,11 @@
-import { insertBLike, deleteBLike, insertSLike, deleteSLike } from "../models/Like.js";
+import { insertBLike, deleteBLike, insertSLike, deleteSLike, selectBUser, selectRUser } from "../models/Like.js";
 
 //꿀조합 게시판 좋아요 선택
 const insertBoardLike = async (postId, userId) => {
+    const checkUser = await selectBUser(postId, userId);
+    if(checkUser.length != 0) {
+        return null;
+    }
     const addedLikeId = await insertBLike(postId, userId);
     return addedLikeId;
 }
@@ -14,6 +18,10 @@ const deleteBoardLike = async (postId, userId) => {
 
 //건의 게시판 좋아요 선택
 const insertSuggestionLike = async (suggestionId, userId) => {
+    const checkUser = await selectRUser(suggestionId, userId);
+    if(checkUser.length != 0) {
+        return null;
+    }
     const addedLikeId = await insertSLike(suggestionId, userId);
     return addedLikeId;
 }
