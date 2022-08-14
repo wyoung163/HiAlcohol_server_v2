@@ -154,7 +154,7 @@ const boardController = {
       const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
-      const files = req?.files;
+      const files = req?.files ?? null;
       console.log("req ==", req);
 
       // 유저가 존재하는지 확인
@@ -181,7 +181,7 @@ const boardController = {
 
       let images;
 
-      if (files?.length !== 0) { 
+      if (!files | files?.length !== 0) { 
         images = files.map((v) => v.location);
         images = JSON.stringify(images);
       }
