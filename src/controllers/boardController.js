@@ -154,7 +154,7 @@ const boardController = {
       const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
-      const files = req.files;
+      const files = req?.files;
       console.log("req ==", req);
 
       // 유저가 존재하는지 확인
