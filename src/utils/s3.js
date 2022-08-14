@@ -10,7 +10,8 @@ const fileFilter = (req, file, cb) => {
     fileType == "png" ||
     fileType == "jpeg" ||
     fileType == "gif" ||
-    fileType == "webp"
+    fileType == "webp" ||
+    fileType == "ico" 
   ) {
     cb(null, true);
   } else {
