@@ -5,6 +5,7 @@ import AWS from "aws-sdk";
 const fileFilter = (req, file, cb) => {
   const typeArray = file.mimetype.split("/");
   const fileType = typeArray[1];
+  console.log("fileType", fileType);
   if (
     fileType == "jpg" ||
     fileType == "png" ||
