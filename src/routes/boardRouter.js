@@ -383,7 +383,7 @@ boardRouter.get(
 boardRouter.put(
   "/boards/:id",
   loginRequired,
-  // imageUpload.array("images"),
+  imageUpload.array("images"),
   boardValidator.checkId,
   boardController.editPost
 );

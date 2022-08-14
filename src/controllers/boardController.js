@@ -154,6 +154,7 @@ const boardController = {
       const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
+      const files = req.files;
       console.log("req ==", req);
 
       // 유저가 존재하는지 확인
@@ -178,6 +179,10 @@ const boardController = {
         }
       });
 
+      let images = files.map((v) => v.location);
+      // 배열을 저장하기 위해 문자열로 변환
+      images = JSON.stringify(images);
+
       const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
         const body = {
@@ -198,6 +203,7 @@ const boardController = {
       }
 
       let data = await BoardService.updatePost({ postId, toUpdate });
+      data = await BoardService.createImages({ postId, images });
       data = await BoardService.findPost({ userId, postId });
 
       // 이미지가 존재한다면
