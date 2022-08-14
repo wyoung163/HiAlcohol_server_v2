@@ -179,9 +179,13 @@ const boardController = {
         }
       });
 
-      let images = files.map((v) => v.location);
+      let images;
+
+      if (files.length !== 0) { 
+        images = files.map((v) => v.location);
+        images = JSON.stringify(images);
+      }
       // 배열을 저장하기 위해 문자열로 변환
-      images = JSON.stringify(images);
 
       const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
