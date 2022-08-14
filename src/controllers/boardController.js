@@ -181,7 +181,7 @@ const boardController = {
 
       let images;
 
-      if (files.length !== 0) { 
+      if (files?.length !== 0) { 
         images = files.map((v) => v.location);
         images = JSON.stringify(images);
       }
