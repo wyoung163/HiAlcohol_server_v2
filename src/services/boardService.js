@@ -163,7 +163,7 @@ const BoardService = {
 
   /** 글 삭제 함수
    * 
-   * @param {postId} - 글 id 
+   * @param {Number} postId - 글 id 
    * @returns deletedPost
    */
   removePost: async ({ postId }) => {
@@ -175,6 +175,11 @@ const BoardService = {
     return deletedPost;
   },
 
+  /** 글 이미지 삭제 함수
+   * 
+   * @param {Number} postId - 글 id 
+   * @returns deletedPost
+   */
   deletePostImage: async ({ postId }) => { 
     const deletePostImageQuery = `
     update post set updatedate = now(), images = null
