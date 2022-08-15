@@ -29,6 +29,6 @@ const swaggerSpec = swaggerJSDoc(options);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// app.listen(PORT, () => {
-//   console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
+});
