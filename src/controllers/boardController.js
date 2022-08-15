@@ -283,6 +283,7 @@ const boardController = {
     }
   },
 
+  // 게시글 이미지 삭제
   deletePostImage: async (req, res, next) => { 
     try { 
       const userId = req.currentUserId;
