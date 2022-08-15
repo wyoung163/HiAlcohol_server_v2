@@ -194,7 +194,7 @@ const boardController = {
           message: "존재하지 않는 게시글입니다.",
         };
 
-        return res.status(404).send({error: body});
+        return res.status(404).send({ error: body });
       }
 
       if (isPostExist.userId !== userId) {
@@ -203,11 +203,16 @@ const boardController = {
           message: "본인이 작성한 글만 수정 가능합니다.",
         };
 
-        return res.status(403).send({error: body});
+        return res.status(403).send({ error: body });
       }
 
       let data = await BoardService.updatePost({ postId, toUpdate });
-      data = await BoardService.createImages({ postId, images });
+
+      // 이미지가 있다면 수정
+      if (images) { 
+        data = await BoardService.createImages({ postId, images });
+      }
+      
       data = await BoardService.findPost({ userId, postId });
 
       // 이미지가 존재한다면
