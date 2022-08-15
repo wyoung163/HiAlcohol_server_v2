@@ -417,7 +417,7 @@ boardRouter.put(
  *                  type: string
  *                  example: 글 삭제에 성공하였습니다.
  *      404:
- *        description: 게시글 수정 오류
+ *        description: 게시글 삭제 오류
  *        content:
  *         application/json:
  *            schema:
@@ -444,6 +444,64 @@ boardRouter.delete(
   loginRequired,
   boardValidator.checkId,
   boardController.deletePost
+);
+
+/** 게시글 삭제
+ * @swagger
+ * /boards/{id}/images:
+ *   delete:
+ *    summary: 게시글 이미지 삭제 API
+ *    description: 게시글 이미지를 삭제할 때 사용하는 API 입니다.
+ *    tags: [Board]
+ *    parameters:
+ *       - in: path
+ *         name: id
+ *         description: 삭제할 이미지가 있는 게시글의 id
+ *         example: 1
+ *         schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: 게시글 이미지 삭제
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                code:
+ *                  type: number
+ *                  example: 200
+ *                message:
+ *                  type: string
+ *                  example: 이미지 삭제에 성공하였습니다.
+ *      404:
+ *        description: 게시글 수정 오류
+ *        content:
+ *         application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: string
+ *                  example: false
+ *                error:
+ *                  type: object
+ *                  properties:
+ *                    code:
+ *                      type: integer
+ *                      description: http status
+ *                      example: 404
+ *                    message:
+ *                      type: string
+ *                      description: 오류 내용
+ *                      example: 존재하지 않는 게시글입니다.
+ *
+ */
+boardRouter.delete(
+  "/boards/:id/images",
+  loginRequired,
+  boardValidator.checkId,
+  boardController.deletePostImage
 );
 
 

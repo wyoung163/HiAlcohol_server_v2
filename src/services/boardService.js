@@ -175,6 +175,15 @@ const BoardService = {
     return deletedPost;
   },
 
+  deletePostImage: async ({ postId }) => { 
+    const deletePostImageQuery = `
+    update post set updatedate = now(), images = null
+    where id = ?
+  `;
+    const deletedPost = await db.query(deletePostImageQuery, [postId]);
+    return deletedPost;
+  },
+
   
   /********** 댓글 **********/
 

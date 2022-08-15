@@ -212,7 +212,7 @@ const boardController = {
       if (images) { 
         data = await BoardService.createImages({ postId, images });
       }
-      
+
       data = await BoardService.findPost({ userId, postId });
 
       // 이미지가 존재한다면
@@ -275,6 +275,55 @@ const boardController = {
       const body = {
         code: 200,
         message: "글 삭제에 성공하였습니다.",
+      };
+
+      return res.status(200).send(body);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  deletePostImage: async (req, res, next) => { 
+    try { 
+      const userId = req.currentUserId;
+      const postId = req.params.id;
+
+      // 유저가 존재하는지 확인
+      const isUserExist = await UserService.getUserInfo({ id: userId });
+
+      if (isUserExist.length === 0) { 
+        const body = {
+          code: 404,
+          message: "존재하지 않는 유저입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      const isPostExist = await BoardService.findPost({ userId, postId });
+      if (!isPostExist) {
+        const body = {
+          code: 404,
+          message: "존재하지 않는 게시글입니다.",
+        };
+
+        return res.status(404).send({ error: body });
+      }
+
+      if (isPostExist.userId !== userId) {
+        const body = {
+          code: 403,
+          message: "본인이 작성한 글만 삭제 가능합니다.",
+        };
+
+        return res.status(403).send({ error: body });
+      }
+
+      await BoardService.deletePostImage({ postId });
+
+      const body = {
+        code: 200,
+        message: "이미지 삭제에 성공하였습니다.",
       };
 
       return res.status(200).send(body);
