@@ -12,7 +12,8 @@ const addRecipes = async (req, res) => {
         let addedMaterialIds;
         let materialIds;
 
-        if(cocktail == undefined || materials == undefined || rate == undefined || content == undefined){
+        if(cocktail == undefined || cocktail.length <= 0 || materials == undefined || materials.length <= 0 || 
+            rate == undefined || rate.length <= 0 || content == undefined || content.length <= 0){
             return res.send(response({"code":400, "message": '레시피에 빠진 내용이 있는지 확인해주세요'}));
         }
 
