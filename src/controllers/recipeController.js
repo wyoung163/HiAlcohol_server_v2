@@ -12,6 +12,10 @@ const addRecipes = async (req, res) => {
         let addedMaterialIds;
         let materialIds;
 
+        if(cocktail == undefined || materials == undefined || rate == undefined || content == undefined){
+            return res.send(response({"code":400, "message": '레시피에 빠진 내용이 있는지 확인해주세요'}));
+        }
+
         //동일한 이름의 칵테일이 존재하는지 확인
         const existedCocktail = await checkCocktail(cocktail);
         if(existedCocktail.length > 0){

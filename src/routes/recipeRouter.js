@@ -89,7 +89,7 @@ const recipeRouter = Router();
  *                      description: 추가된 레시피 아이디
  *                      example: 50
  */
-recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), addRecipes);
+recipeRouter.post("/admin/recipe", loginRequired, isAdmin, imageUpload.single("image"), addRecipes);
 
 /**
  * @swagger
