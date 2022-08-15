@@ -446,7 +446,7 @@ boardRouter.delete(
   boardController.deletePost
 );
 
-/** 게시글 삭제
+/** 게시글 이미지 삭제
  * @swagger
  * /boards/{id}/images:
  *   delete:
@@ -475,7 +475,7 @@ boardRouter.delete(
  *                  type: string
  *                  example: 이미지 삭제에 성공하였습니다.
  *      404:
- *        description: 게시글 수정 오류
+ *        description: 게시글 이미지 삭제 오류
  *        content:
  *         application/json:
  *            schema:
