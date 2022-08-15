@@ -82,11 +82,21 @@ async function insertRecipeInfo(recipeInfo) {
 
 //수정한 레시피 id, 레시피 정보 반환
 async function updateRecipeInfo(recipeInfo) {
-    //디폴트 이미지
-    const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208';
-    if(recipeInfo.image == null){
-        recipeInfo.image = defaultImage;
-    }
+    const updateImageQuery = `
+    update recipe set image = ?
+    where id = ?
+    `;
+
+    if(recipeInfo.image != undefined) {
+        const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
+    } //else {
+    //     //디폴트 이미지
+    //     const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208';
+    //     if(recipeInfo.image == null){
+    //         recipeInfo.image = defaultImage;
+    //     }
+    //     const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
+    // }
 
     const updateCocktailQuery = `
         update recipe set cocktail = ?
@@ -99,7 +109,7 @@ async function updateRecipeInfo(recipeInfo) {
         if(existence.length > 0 && existence[0].id != recipeInfo.id){
             return ;
         }
-        
+
         const [editedCocktail] = await db.query(updateCocktailQuery, [recipeInfo.cocktail, recipeInfo.id]);
     }
 
@@ -119,15 +129,6 @@ async function updateRecipeInfo(recipeInfo) {
 
     if(recipeInfo.content != undefined) {
         const [editedContent] = await db.query(updateContentQuery, [recipeInfo.content, recipeInfo.id]);
-    }
-
-    const updateImageQuery = `
-        update recipe set image = ?
-        where id = ?
-    `;
-
-    if(recipeInfo.image != undefined) {
-        const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
     }
 
     return "success";
