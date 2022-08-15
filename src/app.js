@@ -49,7 +49,7 @@ app.use(errorMiddleware);
 
 // https 설정하기
 import fs from 'fs';
-// import http from 'http';
+import http from 'http';
 import https from 'https';
 
 // Certificate 인증서 경로
@@ -64,13 +64,13 @@ const credentials = {
 };
 
 // Starting both http & https servers
-// const httpServer = http.createServer(app);
+const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
 // 포트 번호 그대로 사용
-// httpServer.listen(80, () => {
-// 	console.log('HTTP Server running on port 80');
-// });
+httpServer.listen(80, () => {
+	console.log('HTTP Server running on port 80');
+});
 
 httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');
