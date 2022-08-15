@@ -154,7 +154,7 @@ const boardController = {
       const postId = req.params.id;
       const title = req.body.title;
       const content = req.body.content;
-      const files = req.files;
+      const files = req?.files ?? null;
       console.log("req ==", req);
 
       // 유저가 존재하는지 확인
@@ -179,9 +179,13 @@ const boardController = {
         }
       });
 
-      let images = files.map((v) => v.location);
+      let images;
+
+      if (!files | files?.length !== 0) { 
+        images = files.map((v) => v.location);
+        images = JSON.stringify(images);
+      }
       // 배열을 저장하기 위해 문자열로 변환
-      images = JSON.stringify(images);
 
       const isPostExist = await BoardService.findPost({ userId, postId });
       if (!isPostExist) {
@@ -190,7 +194,7 @@ const boardController = {
           message: "존재하지 않는 게시글입니다.",
         };
 
-        return res.status(404).send({error: body});
+        return res.status(404).send({ error: body });
       }
 
       if (isPostExist.userId !== userId) {
@@ -199,11 +203,16 @@ const boardController = {
           message: "본인이 작성한 글만 수정 가능합니다.",
         };
 
-        return res.status(403).send({error: body});
+        return res.status(403).send({ error: body });
       }
 
       let data = await BoardService.updatePost({ postId, toUpdate });
-      data = await BoardService.createImages({ postId, images });
+
+      // 이미지가 있다면 수정
+      if (images) { 
+        data = await BoardService.createImages({ postId, images });
+      }
+      
       data = await BoardService.findPost({ userId, postId });
 
       // 이미지가 존재한다면
