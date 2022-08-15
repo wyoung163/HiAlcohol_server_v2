@@ -14,7 +14,7 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: `http://${process.env.PUBLIC_IP}:5000`,
+      url: `https://${process.env.PUBLIC_IP}:5000`,
       description: "Development server",
     },
   ],
@@ -29,6 +29,36 @@ const swaggerSpec = swaggerJSDoc(options);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(PORT, () => {
-  console.log(`정상적으로 서버를 시작하였습니다. http://localhost:${PORT}`);
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const express = require('express');
+
+const app = express();
+
+// Certificate 인증서 경로
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/chain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
+app.use((req, res) => {
+	res.send('Hello there !');
+});
+
+// Starting both http & https servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(80, () => {
+	console.log('HTTP Server running on port 80');
+});
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
 });
