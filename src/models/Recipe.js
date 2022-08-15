@@ -88,19 +88,49 @@ async function updateRecipeInfo(recipeInfo) {
         recipeInfo.image = defaultImage;
     }
 
-    //존재하는 레시피인지 확인
-    const existence = await selectCocktail(recipeInfo.cocktail);
-    if(existence.length > 0 && existence[0].id != recipeInfo.id){
-        return ;
-    }
-
-    const updateRecipeInfoQuery = `
-        update recipe set cocktail = ?, rate = ?, content = ?, image =?
+    const updateCocktailQuery = `
+        update recipe set cocktail = ?
         where id = ?
     `;
 
-    const [editedRecipe] = await db.query(updateRecipeInfoQuery, [recipeInfo.cocktail, recipeInfo.rate, recipeInfo.content, recipeInfo.image, recipeInfo.id]);
-    return {editedRecipe};
+    if(recipeInfo.cocktail != undefined) {
+        //존재하는 레시피인지 확인
+        const existence = await selectCocktail(recipeInfo.cocktail);
+        if(existence.length > 0 && existence[0].id != recipeInfo.id){
+            return ;
+        }
+        
+        const [editedCocktail] = await db.query(updateCocktailQuery, [recipeInfo.cocktail, recipeInfo.id]);
+    }
+
+    const updateRateQuery = `
+        update recipe set rate = ?
+        where id = ?
+    `;
+
+    if(recipeInfo.rate != undefined) {
+        const [editedRate] = await db.query(updateRateQuery, [recipeInfo.rate, recipeInfo.id]);
+    }
+
+    const updateContentQuery = `
+        update recipe set content = ?
+        where id = ?
+    `;
+
+    if(recipeInfo.content != undefined) {
+        const [editedContent] = await db.query(updateContentQuery, [recipeInfo.content, recipeInfo.id]);
+    }
+
+    const updateImageQuery = `
+        update recipe set image = ?
+        where id = ?
+    `;
+
+    if(recipeInfo.image != undefined) {
+        const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
+    }
+
+    return "success";
 }
 
 //추가한 레시피+재료 정보 반환
@@ -113,7 +143,10 @@ async function insertInclusionInfo(recipeId, materialIds) {
         delete from inclusion
         where recipeId = ?;
     `
-    await db.query(deleteInclusionQuery, [recipeId]);
+    
+    if(materialIds != undefined) {
+        await db.query(deleteInclusionQuery, [recipeId]);
+    }
 
     //이미 존재하는지 확인
     const selectInclusionQuery = `

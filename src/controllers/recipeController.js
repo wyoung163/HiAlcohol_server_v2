@@ -56,6 +56,7 @@ const editRecipes = async (req, res) => {
         const content = req.body.content;
         const image = req.file?.location ?? null;
         const recipeInfo = {cocktail, rate, content, image, id};
+        let checkingMaterials;
         let addedMaterialIds;
         let materialIds;
 
@@ -65,19 +66,23 @@ const editRecipes = async (req, res) => {
             return res.send(response({"code":400, "message": '존재하지 않는 레시피입니다.'}));
         }
     
-        //이미 존재하는 재료인지 확인 -> 존재하는 재료일 경우 id, 그렇지 않을 경우 재료명 반환
-        const checkingMaterials = await selectMaterials(materials);
+        if(materials != undefined){
+            //이미 존재하는 재료인지 확인 -> 존재하는 재료일 경우 id, 그렇지 않을 경우 재료명 반환
+            checkingMaterials = await selectMaterials(materials);
+        }
 
         //존재하지 않는 재료 재료 테이블에 추가
-        if(checkingMaterials.uncheckingMaterials.length > 0){
-            addedMaterialIds = await insertMaterials(checkingMaterials.uncheckingMaterials);
-        }
+        if(checkingMaterials != undefined){
+            if(checkingMaterials.uncheckingMaterials.length > 0){
+                addedMaterialIds = await insertMaterials(checkingMaterials.uncheckingMaterials);
+            }
         
-        //inclusion에 쓰일 재료 아이디 배열로 묶기
-        if(addedMaterialIds != undefined){
-            materialIds = checkingMaterials.checkingMaterialIds.concat(addedMaterialIds);
-        } else {
-            materialIds = checkingMaterials.checkingMaterialIds;
+            //inclusion에 쓰일 재료 아이디 배열로 묶기
+            if(addedMaterialIds != undefined){
+                materialIds = checkingMaterials.checkingMaterialIds.concat(addedMaterialIds);
+            } else {
+                materialIds = checkingMaterials.checkingMaterialIds;
+            }
         }
 
         //레시피 수정
@@ -88,7 +93,9 @@ const editRecipes = async (req, res) => {
         }
         
         //레시피에 사용되는 재료 정보 inclusion 테이블에 추가
-        const addedInclusions = await insertInclusions(id, materialIds);
+        if(materialIds != undefined){
+            const addedInclusions = await insertInclusions(id, materialIds);
+        }
 
         return res.send(response({"code":200, "message": '레시피 수정에 성공하였습니다.'}, {recipeId: id}));
     } catch(err) {
