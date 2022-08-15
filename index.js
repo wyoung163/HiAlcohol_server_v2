@@ -33,9 +33,9 @@ app.listen(PORT, () => {
   console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
 });
 
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
+import fs from 'fs';
+import http from 'http';
+import https from 'https';
 
 // Certificate 인증서 경로
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/privkey.pem', 'utf8');
