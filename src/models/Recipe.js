@@ -108,6 +108,13 @@ async function insertInclusionInfo(recipeId, materialIds) {
     let unpresentMaterialIds = [];
     let addedInclusions = [];
 
+    //불필요한 inclusion 삭제
+    const deleteInclusionQuery = `
+        delete from inclusion
+        where recipeId = ?;
+    `
+    await db.query(deleteInclusionQuery, [recipeId]);
+
     //이미 존재하는지 확인
     const selectInclusionQuery = `
         select * from inclusion
