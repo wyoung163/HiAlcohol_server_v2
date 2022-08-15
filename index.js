@@ -33,6 +33,8 @@ app.listen(PORT, () => {
   console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
 });
 
+
+// https 설정하기
 import fs from 'fs';
 import http from 'http';
 import https from 'https';
