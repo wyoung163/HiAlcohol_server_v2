@@ -32,33 +32,3 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.listen(PORT, () => {
   console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
 });
-
-
-// https 설정하기
-import fs from 'fs';
-// import http from 'http';
-import https from 'https';
-
-// Certificate 인증서 경로
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/hialcohol.p-e.kr/chain.pem', 'utf8');
-
-const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
-
-// Starting both http & https servers
-// const httpServer = http.createServer(app);
-const httpsServer = https.createServer(credentials, app);
-
-// 포트 번호 그대로 사용
-// httpServer.listen(80, () => {
-// 	console.log('HTTP Server running on port 80');
-// });
-
-httpsServer.listen(443, () => {
-	console.log('HTTPS Server running on port 443');
-});
