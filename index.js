@@ -29,9 +29,9 @@ const swaggerSpec = swaggerJSDoc(options);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// app.listen(PORT, () => {
-//   console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`정상적으로 서버를 시작하였습니다. https://localhost:${PORT}`);
+});
 
 
 // https 설정하기
@@ -58,10 +58,10 @@ app.use((req, res) => {
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(80, () => {
-	console.log('HTTP Server running on port 80');
-});
+// httpServer.listen(80, () => {
+// 	console.log('HTTP Server running on port 80');
+// });
 
-httpsServer.listen(PORT, () => {
+httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');
 });
