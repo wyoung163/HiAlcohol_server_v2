@@ -93,7 +93,7 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
 
 /**
  * @swagger
- * /admin/recipe/:id:
+ * /admin/recipe:
  *   patch:
  *    summary: 레시피 수정 API
  *    description: 술 레시피 수정에 대한 API입니다.
