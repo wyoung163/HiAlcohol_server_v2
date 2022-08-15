@@ -171,6 +171,6 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *                      description: 수정된 레시피 아이디
  *                      example: 50
  */
-recipeRouter.patch("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), editRecipes);
+recipeRouter.patch("/admin/recipe", loginRequired, isAdmin, imageUpload.single("image"), editRecipes);
 
 export { recipeRouter };
