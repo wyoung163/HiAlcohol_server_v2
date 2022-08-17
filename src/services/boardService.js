@@ -1,5 +1,9 @@
 import { db } from "../../config/db.js";
 
+import moment from "moment";
+import "moment-timezone";
+moment.tz.setDefault("Asia/Seoul");
+
 //로그인한 회원의 좋아요 여부 조회 Query
 const likeCheckQuery = `
   SELECT userId 
@@ -47,9 +51,9 @@ const BoardService = {
   create: async ({ userId, title, content, images }) => {
     const createQuery = `
       insert into post(userId, title, content, images, createdate)
-      values(?, ?, ?, ?, now())
+      values(?, ?, ?, ?, ?)
     `;
-    const post = await db.query(createQuery, [userId, title, content, images]);
+    const post = await db.query(createQuery, [userId, title, content, images, moment(moment.utc(Date.now()).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return post[0].insertId;
   },
 
@@ -115,7 +119,7 @@ const BoardService = {
     const getPostQuery = `
       SELECT post.*, count(liked.id) 'count'
       FROM (
-        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.createdate
+        SELECT post.id 'postId', user.id 'userId', user.nickname 'nickname', post.title, post.content, post.images, post.createdate
         FROM post, user
         WHERE post.userId = user.id
         AND post.id = ?
@@ -154,24 +158,38 @@ const BoardService = {
    */
   updatePost: async ({ postId, toUpdate }) => {
     const updatePostQuery = `
-      update post set title = ?, content = ?, updatedate = now()
+      update post set title = ?, content = ?, updatedate = ?
       where id = ?
     `;
-    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, postId]);
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, moment(moment.utc(Date.now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return updatedPost;  
   },
 
   /** 글 삭제 함수
    * 
-   * @param {postId} - 글 id 
+   * @param {Number} postId - 글 id 
    * @returns deletedPost
    */
   removePost: async ({ postId }) => {
     const deletePostQuery = `
-      update post set updatedate = now(), blind = 2
+      update post set updatedate = ?, blind = 2
       where id = ?
     `;
-    const deletedPost = await db.query(deletePostQuery, [postId]);
+    const deletedPost = await db.query(deletePostQuery, [moment(moment.utc(Date.now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
+    return deletedPost;
+  },
+
+  /** 글 이미지 삭제 함수
+   * 
+   * @param {Number} postId - 글 id 
+   * @returns deletedPost
+   */
+  deletePostImage: async ({ postId }) => { 
+    const deletePostImageQuery = `
+    update post set updatedate = ?, images = null
+    where id = ?
+  `;
+    const deletedPost = await db.query(deletePostImageQuery, [moment(moment.utc(Date.now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return deletedPost;
   },
 
@@ -187,9 +205,9 @@ const BoardService = {
   postComment: async ({ userId, postId, content }) => {
     const createCommentQuery = `
       insert into comment(userId, postId, content, createdate)
-      values(?, ?, ?, now())
+      values(?, ?, ?, ?)
     `;
-    const createComment = await db.query(createCommentQuery, [userId, postId, content]);
+    const createComment = await db.query(createCommentQuery, [userId, postId, content, moment(moment.utc(Date.now()).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return createComment;
   },
 

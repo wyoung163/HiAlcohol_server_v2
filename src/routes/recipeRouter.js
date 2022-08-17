@@ -89,11 +89,11 @@ const recipeRouter = Router();
  *                      description: 추가된 레시피 아이디
  *                      example: 50
  */
-recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), addRecipes);
+recipeRouter.post("/admin/recipe", loginRequired, isAdmin, imageUpload.single("image"), addRecipes);
 
 /**
  * @swagger
- * /admin/recipe/:id:
+ * /admin/recipe:
  *   patch:
  *    summary: 레시피 수정 API
  *    description: 술 레시피 수정에 대한 API입니다.
@@ -171,6 +171,6 @@ recipeRouter.post("/admin/recipe", loginRequired, isAdmin, recipeValidator.check
  *                      description: 수정된 레시피 아이디
  *                      example: 50
  */
-recipeRouter.patch("/admin/recipe", loginRequired, isAdmin, recipeValidator.checkRecipe, imageUpload.single("image"), editRecipes);
+recipeRouter.patch("/admin/recipe", loginRequired, isAdmin, imageUpload.single("image"), editRecipes);
 
 export { recipeRouter };

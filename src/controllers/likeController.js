@@ -7,8 +7,11 @@ const addBoardLike = async (req, res) => {
         const userId = req.currentUserId;
         const postId = req.params.id;
         const addedLikeId = await insertBoardLike(postId, userId);
-
-        return res.send(response({"code":200, "message": '좋아요 선택에 성공하였습니다.'},  {"likedId ": addedLikeId}));
+        if(addedLikeId == null){
+            return res.send(response({"code":400, "message": '이미 해당 게시글의 좋아요를 선택한 사용자입니다.'}));
+        } else {
+            return res.send(response({"code":200, "message": '좋아요 선택에 성공하였습니다.'},  {"likedId ": addedLikeId}));
+        }
     } catch(err) {
         console.log(err);
         return res.send(errResponse({"code": 400, "message": '좋아요 선택에 실패하였습니다.'}));
@@ -35,8 +38,11 @@ const addSuggestionLike = async (req, res) => {
         const userId = req.currentUserId;
         const suggestionId = req.params.id;
         const addedLikeId = await insertSuggestionLike(suggestionId, userId);
-
-        return res.send(response({ "code": 200, "message": '좋아요 선택에 성공하였습니다.' }, { "likedId ": addedLikeId }));
+        if(addedLikeId == null){
+            return res.send(response({"code":400, "message": '이미 해당 게시글의 좋아요를 선택한 사용자입니다.'}));
+        } else {
+            return res.send(response({ "code": 200, "message": '좋아요 선택에 성공하였습니다.' }, { "likedId ": addedLikeId }));
+        }
     } catch (err) {
         console.log(err);
         return res.send(errResponse({ "code": 400, "message": '좋아요 선택에 실패하였습니다.' }));

@@ -19,7 +19,7 @@ const UserService = {
   upsertKakaoUser: async ({ code }) => {
     const KAKAO_CLIENT_ID = process.env.KAKAO_CLIENT_ID;
     const KAKAO_REDIRECT_URL = process.env.KAKAO_REDIRECT_URL_IN_SERVICE;
-
+    
     //카카오 토큰 받기
     const ret = await axios.post(
       `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URL}&code=${code}`,
@@ -131,13 +131,13 @@ const UserService = {
    * @param {Object} toUpdate - 업데이트할 회원 정보 
    * @returns updatedUser
    */
-  editUserImage: async ({ id, toUpdate }) => {
+  editUserImage: async ({ id, profile_url }) => {
     const updateUserQuery = `
       update user set profile_url = ?
       where id = ?
     `;
 
-    await db.query(updateUserQuery, [toUpdate.profile_url, id]);
+    await db.query(updateUserQuery, [profile_url, id]);
 
     const getUpdatedUserQuery = `
       select *

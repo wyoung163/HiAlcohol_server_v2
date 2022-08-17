@@ -82,31 +82,72 @@ async function insertRecipeInfo(recipeInfo) {
 
 //수정한 레시피 id, 레시피 정보 반환
 async function updateRecipeInfo(recipeInfo) {
-    //디폴트 이미지
-    const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208';
-    if(recipeInfo.image == null){
-        recipeInfo.image = defaultImage;
-    }
+    const updateImageQuery = `
+    update recipe set image = ?
+    where id = ?
+    `;
 
-    //존재하는 레시피인지 확인
-    const existence = await selectCocktail(recipeInfo.cocktail);
-    if(existence.length > 0 && existence[0].id != recipeInfo.id){
-        return ;
-    }
+    if(recipeInfo.image != undefined) {
+        const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
+    } //else {
+    //     //디폴트 이미지
+    //     const defaultImage = 'https://rabbitpull.kr.objectstorage.ncloud.com/users/1659007051208';
+    //     if(recipeInfo.image == null){
+    //         recipeInfo.image = defaultImage;
+    //     }
+    //     const [editedImage] = await db.query(updateImageQuery, [recipeInfo.image, recipeInfo.id]);
+    // }
 
-    const updateRecipeInfoQuery = `
-        update recipe set cocktail = ?, rate = ?, content = ?, image =?
+    const updateCocktailQuery = `
+        update recipe set cocktail = ?
         where id = ?
     `;
 
-    const [editedRecipe] = await db.query(updateRecipeInfoQuery, [recipeInfo.cocktail, recipeInfo.rate, recipeInfo.content, recipeInfo.image, recipeInfo.id]);
-    return {editedRecipe};
+    if(recipeInfo.cocktail != undefined) {
+        //존재하는 레시피인지 확인
+        const existence = await selectCocktail(recipeInfo.cocktail);
+        if(existence.length > 0 && existence[0].id != recipeInfo.id){
+            return ;
+        }
+
+        const [editedCocktail] = await db.query(updateCocktailQuery, [recipeInfo.cocktail, recipeInfo.id]);
+    }
+
+    const updateRateQuery = `
+        update recipe set rate = ?
+        where id = ?
+    `;
+
+    if(recipeInfo.rate != undefined) {
+        const [editedRate] = await db.query(updateRateQuery, [recipeInfo.rate, recipeInfo.id]);
+    }
+
+    const updateContentQuery = `
+        update recipe set content = ?
+        where id = ?
+    `;
+
+    if(recipeInfo.content != undefined) {
+        const [editedContent] = await db.query(updateContentQuery, [recipeInfo.content, recipeInfo.id]);
+    }
+
+    return "success";
 }
 
 //추가한 레시피+재료 정보 반환
 async function insertInclusionInfo(recipeId, materialIds) {
     let unpresentMaterialIds = [];
     let addedInclusions = [];
+
+    //불필요한 inclusion 삭제
+    const deleteInclusionQuery = `
+        delete from inclusion
+        where recipeId = ?;
+    `
+    
+    if(materialIds != undefined) {
+        await db.query(deleteInclusionQuery, [recipeId]);
+    }
 
     //이미 존재하는지 확인
     const selectInclusionQuery = `
