@@ -1,7 +1,8 @@
 import { db } from "../../config/db.js";
 
 import moment from "moment";
-import "moment/locale/ko";
+import "moment-timezone";
+moment.tz.setDefault("Asia/Seoul");
 
 //로그인한 회원의 좋아요 여부 조회 Query
 const likeCheckQuery = `
