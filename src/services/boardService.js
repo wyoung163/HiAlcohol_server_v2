@@ -1,5 +1,8 @@
 import { db } from "../../config/db.js";
 
+import moment from "moment";
+import "moment/locale/ko";
+
 //로그인한 회원의 좋아요 여부 조회 Query
 const likeCheckQuery = `
   SELECT userId 
@@ -47,9 +50,9 @@ const BoardService = {
   create: async ({ userId, title, content, images }) => {
     const createQuery = `
       insert into post(userId, title, content, images, createdate)
-      values(?, ?, ?, ?, now())
+      values(?, ?, ?, ?, ?)
     `;
-    const post = await db.query(createQuery, [userId, title, content, images]);
+    const post = await db.query(createQuery, [userId, title, content, images, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return post[0].insertId;
   },
 
@@ -154,10 +157,10 @@ const BoardService = {
    */
   updatePost: async ({ postId, toUpdate }) => {
     const updatePostQuery = `
-      update post set title = ?, content = ?, updatedate = now()
+      update post set title = ?, content = ?, updatedate = ?
       where id = ?
     `;
-    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, postId]);
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return updatedPost;  
   },
 
@@ -168,10 +171,10 @@ const BoardService = {
    */
   removePost: async ({ postId }) => {
     const deletePostQuery = `
-      update post set updatedate = now(), blind = 2
+      update post set updatedate = ?, blind = 2
       where id = ?
     `;
-    const deletedPost = await db.query(deletePostQuery, [postId]);
+    const deletedPost = await db.query(deletePostQuery, [moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return deletedPost;
   },
 
@@ -182,10 +185,10 @@ const BoardService = {
    */
   deletePostImage: async ({ postId }) => { 
     const deletePostImageQuery = `
-    update post set updatedate = now(), images = null
+    update post set updatedate = ?, images = null
     where id = ?
   `;
-    const deletedPost = await db.query(deletePostImageQuery, [postId]);
+    const deletedPost = await db.query(deletePostImageQuery, [moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return deletedPost;
   },
 
@@ -201,9 +204,9 @@ const BoardService = {
   postComment: async ({ userId, postId, content }) => {
     const createCommentQuery = `
       insert into comment(userId, postId, content, createdate)
-      values(?, ?, ?, now())
+      values(?, ?, ?, ?)
     `;
-    const createComment = await db.query(createCommentQuery, [userId, postId, content]);
+    const createComment = await db.query(createCommentQuery, [userId, postId, content, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return createComment;
   },
 
