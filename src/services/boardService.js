@@ -53,7 +53,7 @@ const BoardService = {
       insert into post(userId, title, content, images, createdate)
       values(?, ?, ?, ?, ?)
     `;
-    const post = await db.query(createQuery, [userId, title, content, images, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
+    const post = await db.query(createQuery, [userId, title, content, images, moment(moment.utc(now()).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return post[0].insertId;
   },
 
@@ -161,7 +161,7 @@ const BoardService = {
       update post set title = ?, content = ?, updatedate = ?
       where id = ?
     `;
-    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
+    const updatedPost = await db.query(updatePostQuery, [toUpdate.title, toUpdate.content, moment(moment.utc(now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return updatedPost;  
   },
 
@@ -175,7 +175,7 @@ const BoardService = {
       update post set updatedate = ?, blind = 2
       where id = ?
     `;
-    const deletedPost = await db.query(deletePostQuery, [moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
+    const deletedPost = await db.query(deletePostQuery, [moment(moment.utc(now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return deletedPost;
   },
 
@@ -189,7 +189,7 @@ const BoardService = {
     update post set updatedate = ?, images = null
     where id = ?
   `;
-    const deletedPost = await db.query(deletePostImageQuery, [moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
+    const deletedPost = await db.query(deletePostImageQuery, [moment(moment.utc(now()).toDate()).format("YYYY-MM-DD HH:mm:ss"), postId]);
     return deletedPost;
   },
 
@@ -207,7 +207,7 @@ const BoardService = {
       insert into comment(userId, postId, content, createdate)
       values(?, ?, ?, ?)
     `;
-    const createComment = await db.query(createCommentQuery, [userId, postId, content, moment(moment.utc(date).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
+    const createComment = await db.query(createCommentQuery, [userId, postId, content, moment(moment.utc(now()).toDate()).format("YYYY-MM-DD HH:mm:ss")]);
     return createComment;
   },
 
